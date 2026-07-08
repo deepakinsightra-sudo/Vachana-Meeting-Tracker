@@ -487,7 +487,42 @@ window.handleOpenBooking = function(i){
 window.handleOpenUpdate = function(i){
   openUpdate(state.meetings[i]);
 };
-
+// Add this function to render a pipeline dashboard view
+function renderPipelineDashboard() {
+  return `
+    <div class="pipeline-container">
+      <div class="pipeline-stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">${state.pipelineStats?.total || 0}</div>
+          <div class="stat-label">Total Leads</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-value">${state.pipelineStats?.winRate || '0%'}</div>
+          <div class="stat-label">Win Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">₹${(state.pipelineStats?.totalInvestmentAmount || 0).toLocaleString()}</div>
+          <div class="stat-label">Pipeline Value</div>
+        </div>
+      </div>
+      <div class="pipeline-stages">
+        ${PIPELINE_STAGES.map(stage => {
+          const count = state.pipelineStats?.stats?.[stage] || 0;
+          const percentage = state.pipelineStats?.conversionRates?.[stage] || '0%';
+          return `
+            <div class="stage-item">
+              <div class="stage-name">${stage}</div>
+              <div class="stage-bar">
+                <div class="stage-fill" style="width: ${(count / state.pipelineStats?.total) * 100}%; background: ${STAGE_COLORS[stage] || '#6B7280'}"></div>
+              </div>
+              <div class="stage-count">${count} (${percentage})</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
 function renderBookingSheet(){
   if(!state.bookingClient) return '';
   const c = state.bookingClient;
