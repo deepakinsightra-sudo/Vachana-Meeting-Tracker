@@ -129,15 +129,6 @@
   }
   .search-box input::placeholder{color:var(--muted);}
 
-  .section-label{
-    font-size:12px;
-    font-weight:600;
-    color:var(--muted);
-    text-transform:uppercase;
-    letter-spacing:0.6px;
-    margin:18px 0 8px;
-  }
-
   .card{
     background:var(--surface);
     border:1px solid var(--line);
@@ -367,20 +358,9 @@
     margin-top:4px;
     letter-spacing:1px;
   }
-  .login-email{
-    font-size:13px;
-    color:var(--muted);
-    text-align:center;
-    margin-top:12px;
-    padding:10px;
-    background:var(--bg);
-    border-radius:8px;
-    width:100%;
-  }
   .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
   @keyframes spin{to{transform:rotate(360deg);}}
 
-  /* Pipeline Dashboard Styles */
   .pipeline-container{
     background:var(--surface);
     border-radius:var(--radius);
@@ -443,6 +423,19 @@
     cursor:pointer !important;
   }
 
+  .debug-info{
+    font-size:11px;
+    color:var(--muted);
+    background:var(--bg);
+    padding:8px 12px;
+    border-radius:8px;
+    margin-top:12px;
+    text-align:left;
+    width:100%;
+    max-width:320px;
+    word-break:break-all;
+  }
+
   @media(max-width:380px){
     .stage-name{min-width:80px;font-size:11px;}
     .stat-value{font-size:17px;}
@@ -459,7 +452,10 @@
 <script src="https://apis.google.com/js/api.js"></script>
 
 <script>
-// Google Sheets API Configuration - YOUR CREDENTIALS FILLED IN
+// ============================================================
+// VACHANA INVESTMENTS - Client Meeting Tracker
+// Google Sheets API Configuration
+// ============================================================
 const CLIENT_ID = '1030005146870-7ta2nhd4kc7fopm7qdbi4qgld4q31uos.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyDh6wOVcdFwHiZbawa2g7U-qtu72ExJzDA';
 const SPREADSHEET_ID = '1ZsJNHfdbCbnMVhi4MKC2sCe_4Vof6rnGApVlOYbIwlg';
@@ -528,14 +524,25 @@ let state = {
   pipelineStats: null,
   pipelineLoading: false,
   gapiInitialized: false,
-  authInitialized: false
+  authInitialized: false,
+  debugLogs: []
 };
+
+function addDebugLog(msg) {
+  state.debugLogs.push(new Date().toLocaleTimeString() + ': ' + msg);
+  console.log(msg);
+  if (state.debugLogs.length > 20) state.debugLogs.shift();
+  render();
+}
 
 // Google OAuth Functions
 function initGoogleAPI() {
   if (state.gapiInitialized) return;
   
+  addDebugLog('Initializing Google API...');
+  
   gapi.load('client:auth2', function() {
+    addDebugLog('gapi loaded, initializing client...');
     gapi.client.init({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
@@ -543,19 +550,22 @@ function initGoogleAPI() {
       scope: SCOPES
     }).then(function() {
       state.gapiInitialized = true;
-      // Listen for sign-in state changes
+      addDebugLog('✅ Google API initialized successfully!');
+      
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
       
-      // Handle initial sign-in state
-      updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+      const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
+      addDebugLog('Initial sign-in status: ' + isSignedIn);
+      updateSigninStatus(isSignedIn);
     }).catch(function(error) {
-      console.error('Error initializing Google API:', error);
-      showToast('Error initializing Google API: ' + error.message);
+      addDebugLog('❌ ERROR initializing Google API: ' + error.message);
+      showToast('Error: ' + error.message);
     });
   });
 }
 
 function updateSigninStatus(isSignedIn) {
+  addDebugLog('Sign-in status changed: ' + isSignedIn);
   state.isSignedIn = isSignedIn;
   state.authInitialized = true;
   if (isSignedIn) {
@@ -564,6 +574,7 @@ function updateSigninStatus(isSignedIn) {
     state.userEmail = profile.getEmail();
     state.userName = profile.getName();
     state.repName = state.userName;
+    addDebugLog('✅ Signed in as: ' + state.userEmail);
     render();
     loadData();
   } else {
@@ -574,16 +585,42 @@ function updateSigninStatus(isSignedIn) {
 }
 
 function signIn() {
+  addDebugLog('🔑 Sign in button clicked');
+  
   if (!state.gapiInitialized) {
+    addDebugLog('Google API not initialized, initializing...');
     showToast('Loading Google API... Please wait.');
     initGoogleAPI();
-    setTimeout(signIn, 1000);
+    setTimeout(() => {
+      if (state.gapiInitialized) {
+        addDebugLog('API initialized, attempting sign in...');
+        gapi.auth2.getAuthInstance().signIn();
+      } else {
+        addDebugLog('API still not initialized, retrying...');
+        setTimeout(signIn, 2000);
+      }
+    }, 1500);
     return;
   }
-  gapi.auth2.getAuthInstance().signIn();
+  
+  try {
+    addDebugLog('Attempting sign in...');
+    gapi.auth2.getAuthInstance().signIn()
+      .then(() => {
+        addDebugLog('✅ Sign in successful!');
+      })
+      .catch((error) => {
+        addDebugLog('❌ Sign in error: ' + JSON.stringify(error));
+        showToast('Sign in error: ' + (error.error || error.message || 'Unknown error'));
+      });
+  } catch (error) {
+    addDebugLog('❌ Sign in exception: ' + error.message);
+    showToast('Error: ' + error.message);
+  }
 }
 
 function signOut() {
+  addDebugLog('🚪 Sign out clicked');
   if (state.gapiInitialized) {
     gapi.auth2.getAuthInstance().signOut();
   }
@@ -648,7 +685,6 @@ async function updateSheet(sheetName, range, values) {
 async function getMeetingsSheet() {
   const meetingsSheetName = 'Meetings';
   
-  // Check if Meetings sheet exists
   try {
     const response = await gapi.client.sheets.spreadsheets.get({
       spreadsheetId: SPREADSHEET_ID
@@ -657,7 +693,6 @@ async function getMeetingsSheet() {
     const hasMeetingsSheet = sheets.some(s => s.properties.title === meetingsSheetName);
     
     if (!hasMeetingsSheet) {
-      // Create Meetings sheet with headers
       await gapi.client.sheets.spreadsheets.batchUpdate({
         spreadsheetId: SPREADSHEET_ID,
         resource: {
@@ -671,7 +706,6 @@ async function getMeetingsSheet() {
         }
       });
       
-      // Add headers
       await appendToSheet(meetingsSheetName, MEETING_HEADERS);
       showToast('Meetings sheet created!');
     }
@@ -897,6 +931,13 @@ function statusClass(s){
 
 // Render Functions
 function renderLogin() {
+  const debugHtml = state.debugLogs.length > 0 ? 
+    `<div class="debug-info">
+      <strong>Debug Log:</strong><br>
+      ${state.debugLogs.slice(-5).join('<br>')}
+      ${state.gapiInitialized ? '✅ API Initialized' : '⏳ Loading API...'}
+    </div>` : '';
+  
   return `
     <div class="topbar">
       <div class="topbar-row">
@@ -922,6 +963,7 @@ function renderLogin() {
       <button class="btn btn-gold" onclick="signIn()" style="max-width:280px;margin-top:24px;">
         🔑 Sign in with Google
       </button>
+      ${debugHtml}
     </div>
   `;
 }
@@ -1390,13 +1432,11 @@ async function submitUpdate(form){
 function render(){
   const app = document.getElementById('app');
   
-  // Show login if not signed in
   if (!state.isSignedIn) {
     app.innerHTML = renderLogin();
     return;
   }
   
-  // Show main app
   let body = state.tab==='search' ? renderSearchTab() : renderMeetingsTab();
   app.innerHTML = `
     ${body}
@@ -1407,18 +1447,21 @@ function render(){
   `;
 }
 
-// Initialize the app
+// Initialize
 function init() {
-  // Load Google API
+  addDebugLog('🚀 App starting...');
+  addDebugLog('📊 SPREADSHEET_ID: ' + SPREADSHEET_ID);
+  addDebugLog('🔑 CLIENT_ID: ' + CLIENT_ID.substring(0, 20) + '...');
+  
   if (typeof gapi !== 'undefined') {
+    addDebugLog('✅ gapi found, initializing...');
     initGoogleAPI();
   } else {
-    // If gapi not loaded, try again after a delay
+    addDebugLog('⏳ gapi not found, waiting...');
     setTimeout(init, 1000);
   }
 }
 
-// Start the app
 init();
 </script>
 </body>
