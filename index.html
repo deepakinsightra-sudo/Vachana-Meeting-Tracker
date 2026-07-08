@@ -165,6 +165,12 @@ const STAGE_COLORS = {
   'Negotiation':'#DC2626','Decision Pending':'#7C3AED','Client Onboarded':'#1F9D63','Lost':'#6B7280'
 };
 
+const SPANCO_STAGES = ['Suspect','Prospect','Approach','Negotiation','Close','Order'];
+const SPANCO_COLORS = {
+  'Suspect':'#6B7280','Prospect':'#2563A8','Approach':'#7C3AED',
+  'Negotiation':'#EA580C','Close':'#1F9D63','Order':'#C9A84C'
+};
+
 const STORAGE_KEY = 'vachana_tracker_config';
 const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_fsOFhF-Rb19yH086hc-BWYTVsKwTTXLC50WrLTzDSE1Judgk5bVqbHkj4QMzNj1j/exec';
 
@@ -184,7 +190,9 @@ let state = {
   toast: null,
   repName: '',
   pipelineStats: null,
-  pipelineLoading: false
+  pipelineLoading: false,
+  spancoStats: null,
+  spancoLoading: false
 };
 
 function loadConfig(){
@@ -198,6 +206,7 @@ function loadConfig(){
     testConnection();
     fetchMeetings();
     fetchPipelineStats();
+    fetchSpancoStats();
   }
 }
 
@@ -219,6 +228,7 @@ function saveScriptUrl(url){
   testConnection();
   fetchMeetings();
   fetchPipelineStats();
+  fetchSpancoStats();
 }
 
 function saveRepName(name){
@@ -252,7 +262,6 @@ async function apiPost(payload){
 let searchDebounce;
 function onSearchInput(val){
   state.query = val;
-  render();
   clearTimeout(searchDebounce);
   if(!val.trim()){ state.searchResults=[]; render(); return; }
   searchDebounce = setTimeout(async ()=>{
@@ -289,6 +298,18 @@ async function fetchPipelineStats(){
     console.error('Pipeline stats error', e);
   }
   state.pipelineLoading = false;
+  render();
+}
+
+async function fetchSpancoStats(){
+  state.spancoLoading = true; render();
+  try{
+    const data = await apiGet('spanco', {});
+    state.spancoStats = data;
+  }catch(e){
+    console.error('SPANCO stats error', e);
+  }
+  state.spancoLoading = false;
   render();
 }
 
@@ -491,6 +512,41 @@ function renderSearchTab(){
   </div>`;
 }
 
+function renderSpancoDashboard(){
+  const stats = state.spancoStats;
+  if(!stats || state.spancoLoading){
+    return `<div class="pipeline-container"><div class="empty">Loading lead stages...</div></div>`;
+  }
+  if(stats.error){
+    return `<div class="pipeline-container"><div class="empty">${esc(stats.error)}</div></div>`;
+  }
+  if(stats.columnFound === false){
+    return `<div class="pipeline-container"><div class="empty">Couldn't find a SPANCO/Lead Stage column on your sheet. Check the column name.</div></div>`;
+  }
+  const total = stats.total || 0;
+  const stagesHtml = SPANCO_STAGES.map(stage=>{
+    const count = (stats.stats && stats.stats[stage]) || 0;
+    const pct = (stats.conversionRates && stats.conversionRates[stage]) || '0%';
+    const barWidth = total > 0 ? Math.round((count/total)*100) : 0;
+    const color = SPANCO_COLORS[stage] || '#6B7280';
+    return `
+      <div class="stage-item">
+        <div class="stage-name"><span class="stage-color-dot" style="background:${color}"></span>${stage}</div>
+        <div class="stage-bar"><div class="stage-fill" style="width:${barWidth}%;background:${color}"></div></div>
+        <div class="stage-count">${count} (${pct})</div>
+      </div>`;
+  }).join('');
+  return `
+  <div class="pipeline-container">
+    <div class="pipeline-header"><h3>Lead pipeline (SPANCO)</h3><button class="refresh-btn" onclick="fetchSpancoStats()" aria-label="Refresh">&#8635;</button></div>
+    <div class="pipeline-stats-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total leads</div></div>
+      <div class="stat-card"><div class="stat-value">${stats.unspecified||0}</div><div class="stat-label">Stage not set</div></div>
+    </div>
+    <div class="pipeline-stages">${stagesHtml}</div>
+  </div>`;
+}
+
 function renderPipelineDashboard(){
   const stats = state.pipelineStats;
   if(!stats || state.pipelineLoading){
@@ -557,6 +613,9 @@ function renderMeetingsTab(){
   }
   return renderTopbar('Pipeline') + `
   <div class="content">
+    <div class="section-label">Lead stage (pre-meeting)</div>
+    ${renderSpancoDashboard()}
+    <div class="section-label">Deal conversion (post-meeting)</div>
     ${renderPipelineDashboard()}
     <div class="section-label">Recent meetings</div>
     ${body}
@@ -573,7 +632,7 @@ function renderBottomNav(){
 
 window.handleTab = function(t){
   state.tab = t;
-  if(t==='meetings'){ fetchMeetings(); fetchPipelineStats(); }
+  if(t==='meetings'){ fetchMeetings(); fetchPipelineStats(); fetchSpancoStats(); }
   render();
 };
 
