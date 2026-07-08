@@ -28,122 +28,35 @@
     --info:#2563A8;
     --info-bg:#E7F0FA;
     --radius:14px;
-    --shadow:0 2px 8px rgba(0,0,0,0.06);
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    font-family:'Inter',sans-serif;
-    color:var(--text);
-    cursor:default;
-  }
-  input, select, textarea, button{
-    cursor:pointer;
-  }
-  input:focus, select:focus, textarea:focus{
-    cursor:text;
-  }
-  #app{
-    max-width:440px;
-    margin:0 auto;
-    min-height:100vh;
-    background:var(--bg);
-    display:flex;
-    flex-direction:column;
-    position:relative;
-  }
+  body{margin:0;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);}
+  #app{max-width:440px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative;}
 
-  .topbar{
-    background: var(--surface);
-    color:var(--text);
-    padding:12px 18px 12px;
-    position:sticky;
-    top:0;
-    z-index:10;
-    border-bottom: 2px solid var(--gold);
-    box-shadow:0 2px 8px rgba(0,0,0,0.04);
-  }
+  .topbar{background:var(--surface);color:var(--text);padding:12px 18px;position:sticky;top:0;z-index:10;border-bottom:2px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,0.04);}
   .topbar-row{display:flex;align-items:center;justify-content:space-between;}
-  .brand{display:flex;align-items:center;gap:12px;}
-  .brand-logo{
-    height:36px;
-    width:auto;
-    object-fit:contain;
-  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:34px;height:34px;border-radius:9px;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:15px;flex-shrink:0;}
+  .brand-logo-img{height:32px;width:auto;max-width:120px;object-fit:contain;flex-shrink:0;}
+  .login-logo{width:120px;height:auto;margin:0 auto 18px;display:block;object-fit:contain;}
   .brand-text{display:flex;flex-direction:column;}
-  .brand-name{
-    font-family:'Sora',sans-serif;
-    font-weight:600;
-    font-size:15px;
-    letter-spacing:0.3px;
-    color:var(--navy);
-  }
-  .brand-sub{
-    font-size:8px;
-    opacity:0.6;
-    font-weight:500;
-    letter-spacing:0.8px;
-    text-transform:uppercase;
-    color:var(--navy);
-  }
-  .icon-btn{
-    background:rgba(10,22,40,0.05);
-    border:1px solid rgba(10,22,40,0.1);
-    color:var(--navy);
-    width:34px;
-    height:34px;
-    border-radius:9px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:16px;
-    transition:all 0.2s;
-  }
+  .brand-name{font-family:'Sora',sans-serif;font-weight:600;font-size:15px;color:var(--navy);}
+  .brand-sub{font-size:9px;opacity:0.6;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--navy);}
+  .icon-btn{background:rgba(10,22,40,0.05);border:1px solid rgba(10,22,40,0.1);color:var(--navy);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
   .icon-btn:active{background:rgba(10,22,40,0.1);}
 
   .content{flex:1;padding:16px 16px 90px;}
 
-  .search-box{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    background:var(--surface);
-    border-radius:12px;
-    padding:10px 14px;
-    border:2px solid var(--gold-light);
-    margin-bottom:14px;
-    transition:border-color 0.3s;
-  }
-  .search-box:focus-within{border-color:var(--gold);}
-  .search-box input{
-    border:none;
-    outline:none;
-    flex:1;
-    font-size:15px;
-    font-family:'Inter',sans-serif;
-    background:transparent;
-    color:var(--text);
-    cursor:text;
-  }
+  .search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:10px 14px;border:2px solid var(--gold-light);margin-bottom:14px;}
+  .search-box input{border:none;outline:none;flex:1;font-size:15px;font-family:'Inter',sans-serif;background:transparent;color:var(--text);}
   .search-box input::placeholder{color:var(--muted);}
 
-  .card{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:14px 16px;
-    margin-bottom:10px;
-    cursor:pointer;
-    transition:all 0.15s;
-    border-left: 3px solid var(--gold);
-  }
+  .card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer;}
   .card:active{transform:scale(0.98);}
   .client-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
   .client-name{font-weight:600;font-size:15px;}
   .client-sub{font-size:13px;color:var(--muted);margin-top:2px;}
-  
+
   .meeting-row{display:flex;justify-content:space-between;align-items:center;gap:10px;}
   .meeting-main{flex:1;min-width:0;}
   .meeting-name{font-weight:600;font-size:15px;}
@@ -155,141 +68,39 @@
   .badge.cancelled{background:var(--danger-bg);color:var(--danger);}
   .badge.lost{background:var(--danger-bg);color:var(--danger);}
   .badge.inprogress{background:var(--warn-bg);color:var(--warn);}
-  .badge.new{background:var(--info-bg);color:var(--info);}
-  
-  .stage-badge{
-    font-size:10px;
-    padding:2px 8px;
-    border-radius:12px;
-    font-weight:500;
-    display:inline-flex;
-    align-items:center;
-    gap:4px;
-  }
+  .stage-badge{font-size:10px;padding:2px 8px;border-radius:12px;font-weight:600;white-space:nowrap;}
+  .meeting-location{font-size:12px;color:var(--muted);margin-top:5px;}
+  .meeting-location a{color:var(--info);text-decoration:none;font-weight:600;}
+  .meeting-notes-preview{font-size:12px;color:var(--muted);margin-top:4px;font-style:italic;}
 
   .empty{text-align:center;padding:50px 20px;color:var(--muted);}
-  .empty i{font-size:30px;display:block;margin-bottom:10px;opacity:0.5;}
 
-  .bottomnav{
-    position:sticky;
-    bottom:0;
-    background:var(--surface);
-    border-top:2px solid var(--gold-light);
-    display:flex;
-    max-width:440px;
-    margin:0 auto;
-    width:100%;
-    z-index:10;
-  }
-  .navbtn{
-    flex:1;
-    border:none;
-    background:none;
-    padding:11px 0 9px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:3px;
-    color:var(--muted);
-    font-family:'Inter',sans-serif;
-    font-size:11px;
-    font-weight:500;
-    cursor:pointer;
-    transition:color 0.2s;
-    position:relative;
-  }
-  .navbtn.active{
-    color:var(--navy);
-  }
-  .navbtn.active::after{
-    content:'';
-    position:absolute;
-    top:-2px;
-    left:30%;
-    right:30%;
-    height:3px;
-    background:var(--gold);
-    border-radius:0 0 3px 3px;
-  }
+  .bottomnav{position:sticky;bottom:0;background:var(--surface);border-top:2px solid var(--gold-light);display:flex;max-width:440px;margin:0 auto;width:100%;z-index:10;}
+  .navbtn{flex:1;border:none;background:none;padding:11px 0 9px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-family:'Inter',sans-serif;font-size:11px;font-weight:500;cursor:pointer;position:relative;}
+  .navbtn.active{color:var(--navy);}
+  .navbtn.active::after{content:'';position:absolute;top:-2px;left:30%;right:30%;height:3px;background:var(--gold);border-radius:0 0 3px 3px;}
   .navbtn .dot{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 
-  .sheet-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(10,22,40,0.6);
-    display:flex;
-    align-items:flex-end;
-    z-index:50;
-    animation:fadeIn 0.2s ease-out;
-  }
-  .sheet{
-    background:var(--surface);
-    width:100%;
-    max-width:440px;
-    margin:0 auto;
-    border-radius:20px 20px 0 0;
-    padding:20px 18px 24px;
-    max-height:88vh;
-    overflow-y:auto;
-    animation:slideUp 0.3s ease-out;
-    border-top: 3px solid var(--gold);
-  }
-  @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  .sheet-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.6);display:flex;align-items:flex-end;z-index:50;}
+  .sheet{background:var(--surface);width:100%;max-width:440px;margin:0 auto;border-radius:20px 20px 0 0;padding:20px 18px 24px;max-height:88vh;overflow-y:auto;border-top:3px solid var(--gold);}
   .sheet-handle{width:36px;height:4px;background:var(--line);border-radius:3px;margin:0 auto 14px;}
-  .sheet-title{
-    font-family:'Sora',sans-serif;
-    font-weight:600;
-    font-size:17px;
-    margin-bottom:2px;
-    color:var(--navy);
-  }
+  .sheet-title{font-family:'Sora',sans-serif;font-weight:600;font-size:17px;margin-bottom:2px;color:var(--navy);}
   .sheet-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
 
   label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 5px;}
   input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{
-    width:100%;
-    border:2px solid var(--line);
-    border-radius:10px;
-    padding:10px 12px;
-    font-size:14px;
-    font-family:'Inter',sans-serif;
-    color:var(--text);
-    background:#fff;
-    outline:none;
-    transition:border-color 0.2s;
-    cursor:text;
+    width:100%;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:#fff;outline:none;
   }
   input:focus,select:focus,textarea:focus{border-color:var(--gold);}
   textarea{resize:vertical;min-height:60px;}
 
-  .btn{
-    width:100%;
-    padding:13px;
-    border-radius:11px;
-    border:none;
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:15px;
-    cursor:pointer;
-    margin-top:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    transition:all 0.15s;
-  }
+  .btn{width:100%;padding:13px;border-radius:11px;border:none;font-family:'Inter',sans-serif;font-weight:600;font-size:15px;cursor:pointer;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;}
   .btn-primary{background:var(--navy);color:#fff;}
   .btn-primary:active{background:var(--navy-2);}
   .btn-gold{background:var(--gold);color:var(--navy);}
   .btn-gold:active{background:var(--gold-dark);color:#fff;}
   .btn-outline{background:none;border:2px solid var(--line);color:var(--text);}
-  .btn-outline:active{background:var(--bg);}
-  .btn-success{background:var(--success);color:#fff;}
-  .btn-success:active{background:#168a54;}
-  .btn-danger{background:var(--danger);color:#fff;}
-  .btn-danger:active{background:#a93226;}
-  .btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn:disabled{opacity:0.5;}
 
   .gps-box{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:14px;text-align:center;}
   .gps-box.captured{border-style:solid;border-color:var(--success);background:var(--success-bg);}
@@ -299,216 +110,67 @@
   .pin.pulse::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--success);animation:pulse 1.4s ease-out infinite;}
   @keyframes pulse{0%{transform:scale(0.7);opacity:1;}100%{transform:scale(1.6);opacity:0;}}
 
-  .toast{
-    position:fixed;
-    left:50%;
-    bottom:100px;
-    transform:translateX(-50%);
-    background:var(--navy);
-    color:#fff;
-    padding:11px 18px;
-    border-radius:10px;
-    font-size:13px;
-    font-weight:500;
-    z-index:100;
-    max-width:80%;
-    text-align:center;
-    box-shadow:0 6px 20px rgba(0,0,0,0.2);
-    animation:slideUp 0.3s ease-out;
-    border-left: 3px solid var(--gold);
-  }
+  .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:100;max-width:80%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.2);border-left:3px solid var(--gold);}
 
-  .login-wrap{
-    padding:40px 22px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    min-height:80vh;
-  }
-  .login-logo{
-    width:140px;
-    height:auto;
-    margin:0 auto 24px;
-    display:block;
-    border-radius:12px;
-    background:var(--surface);
-    padding:20px;
-    box-shadow:0 4px 20px rgba(201,168,76,0.15);
-  }
-  .login-title{
-    font-family:'Sora',sans-serif;
-    font-weight:700;
-    font-size:24px;
-    text-align:center;
-    color:var(--navy);
-  }
-  .login-sub{
-    font-size:14px;
-    color:var(--muted);
-    text-align:center;
-    margin-top:8px;
-    line-height:1.6;
-  }
-  .login-company{
-    text-align:center;
-    font-size:11px;
-    color:var(--gold-dark);
-    font-weight:600;
-    margin-top:4px;
-    letter-spacing:1px;
-  }
-  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
-  @keyframes spin{to{transform:rotate(360deg);}}
+  .config-wrap{padding:40px 22px;}
+  .config-logo{width:56px;height:56px;border-radius:16px;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:22px;margin:0 auto 18px;}
+  .config-title{font-family:'Sora',sans-serif;font-weight:700;font-size:20px;text-align:center;color:var(--navy);}
+  .config-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5;}
 
-  .pipeline-container{
-    background:var(--surface);
-    border-radius:var(--radius);
-    padding:16px;
-    border:2px solid var(--gold-light);
-  }
-  .pipeline-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
-  .stat-card{background:var(--bg);border-radius:10px;padding:12px;text-align:center;}
-  .stat-card.success{background:var(--success-bg);}
-  .stat-value{font-size:20px;font-weight:700;font-family:'Sora',sans-serif;color:var(--navy);}
-  .stat-card.success .stat-value{color:var(--success);}
-  .stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;font-weight:600;}
-  
-  .pipeline-stages{margin-top:12px;}
-  .stage-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);}
-  .stage-item:last-child{border-bottom:none;}
-  .stage-name{font-size:12px;font-weight:500;min-width:100px;color:var(--text);display:flex;align-items:center;gap:4px;}
-  .stage-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;}
-  .stage-fill{height:100%;border-radius:3px;transition:width 0.5s ease;}
-  .stage-count{font-size:11px;color:var(--muted);min-width:50px;text-align:right;font-weight:500;}
-
+  .pipeline-container{background:var(--surface);border-radius:var(--radius);padding:16px;border:2px solid var(--gold-light);margin-bottom:16px;}
   .pipeline-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
   .pipeline-header h3{margin:0;font-family:'Sora',sans-serif;font-size:15px;font-weight:600;color:var(--navy);}
   .refresh-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;}
-  .refresh-btn:active{transform:rotate(180deg);transition:transform 0.3s;}
-
-  .stage-color-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;}
-
+  .pipeline-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-card{background:var(--bg);border-radius:10px;padding:12px;text-align:center;}
+  .stat-card.success{background:var(--success-bg);}
+  .stat-value{font-size:18px;font-weight:700;font-family:'Sora',sans-serif;color:var(--navy);}
+  .stat-card.success .stat-value{color:var(--success);}
+  .stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;font-weight:600;}
+  .pipeline-stages{margin-top:4px;}
+  .stage-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);}
+  .stage-item:last-child{border-bottom:none;}
+  .stage-name{font-size:12px;font-weight:500;min-width:110px;color:var(--text);display:flex;align-items:center;}
+  .stage-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;}
+  .stage-fill{height:100%;border-radius:3px;}
+  .stage-count{font-size:11px;color:var(--muted);min-width:56px;text-align:right;font-weight:500;}
+  .stage-color-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;flex-shrink:0;}
   .amount-input{font-family:'IBM Plex Mono',monospace;}
-  .vachana-watermark{
-    text-align:center;
-    font-size:9px;
-    color:var(--gold);
-    opacity:0.4;
-    margin-top:12px;
-    font-weight:600;
-    letter-spacing:2px;
-  }
-  .user-info{
-    font-size:11px;
-    color:var(--muted);
-    display:flex;
-    align-items:center;
-    gap:6px;
-  }
-  .user-avatar{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:var(--gold-light);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:var(--navy);
-    font-weight:600;
-    font-size:12px;
-  }
-
-  .clickable, .clickable *, [onclick], [onclick] * {
-    cursor:pointer !important;
-  }
-
-  .debug-info{
-    font-size:11px;
-    color:var(--muted);
-    background:var(--bg);
-    padding:8px 12px;
-    border-radius:8px;
-    margin-top:12px;
-    text-align:left;
-    width:100%;
-    max-width:320px;
-    word-break:break-all;
-  }
-
-  @media(max-width:380px){
-    .stage-name{min-width:80px;font-size:11px;}
-    .stat-value{font-size:17px;}
-    .pipeline-stats-grid{gap:6px;}
-    .stat-card{padding:8px;}
-    .login-logo{width:100px;}
-  }
+  .section-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin:4px 0 8px;}
 </style>
 </head>
 <body>
 <div id="app"></div>
 
-<!-- Google OAuth Client Library -->
-<script src="https://apis.google.com/js/api.js"></script>
-
 <script>
-// ============================================================
-// VACHANA INVESTMENTS - Client Meeting Tracker
-// Google Sheets API Configuration
-// ============================================================
-const CLIENT_ID = '1030005146870-7ta2nhd4kc7fopm7qdbi4qgld4q31uos.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyDh6wOVcdFwHiZbawa2g7U-qtu72ExJzDA';
-const SPREADSHEET_ID = '1ZsJNHfdbCbnMVhi4MKC2sCe_4Vof6rnGApVlOYbIwlg';
-const DISCOVERY_DOCS = ['https://sheets.googleapis.com/$discovery/rest?version=v4'];
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+const storage = {
+  get(key){
+    try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }
+    catch(e){ return null; }
+  },
+  set(key, value){
+    try{ localStorage.setItem(key, JSON.stringify(value)); }catch(e){}
+  }
+};
 
-// Pipeline Stages
 const PIPELINE_STAGES = [
-  'Lead In',
-  'Qualified Lead',
-  'Meeting Scheduled',
-  'First Meeting',
-  'Proposal Sent',
-  'Under Review',
-  'Negotiation',
-  'Decision Pending',
-  'Client Onboarded',
-  'Lost'
+  'Lead In','Qualified Lead','Meeting Scheduled','First Meeting',
+  'Proposal Sent','Under Review','Negotiation','Decision Pending',
+  'Client Onboarded','Lost'
 ];
 
 const STAGE_COLORS = {
-  'Lead In': '#6B7280',
-  'Qualified Lead': '#3B82F6',
-  'Meeting Scheduled': '#8B5CF6',
-  'First Meeting': '#EC4899',
-  'Proposal Sent': '#F59E0B',
-  'Under Review': '#F97316',
-  'Negotiation': '#EF4444',
-  'Decision Pending': '#8B5CF6',
-  'Client Onboarded': '#10B981',
-  'Lost': '#6B7280'
+  'Lead In':'#6B7280','Qualified Lead':'#2563A8','Meeting Scheduled':'#7C3AED',
+  'First Meeting':'#DB2777','Proposal Sent':'#C9A84C','Under Review':'#EA580C',
+  'Negotiation':'#DC2626','Decision Pending':'#7C3AED','Client Onboarded':'#1F9D63','Lost':'#6B7280'
 };
 
-// Sheet column mappings
-const LEAD_COLUMNS = {
-  name: 0,
-  mobile: 1,
-  email: 2,
-  company: 3
-};
-
-const MEETING_HEADERS = [
-  'Meeting ID', 'Lead Name', 'Mobile No', 'Email Id', 'Company', 'Investment Amount',
-  'Meeting Date', 'Meeting Time', 'Purpose', 'Status',
-  'Pipeline Stage', 'Stage Updated Date',
-  'Address', 'Latitude', 'Longitude',
-  'Notes', 'Created At', 'Last Updated At', 'Updated By'
-];
+const STORAGE_KEY = 'vachana_tracker_config';
+const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_fsOFhF-Rb19yH086hc-BWYTVsKwTTXLC50WrLTzDSE1Judgk5bVqbHkj4QMzNj1j/exec';
 
 let state = {
-  isSignedIn: false,
-  userEmail: '',
-  userName: '',
+  scriptUrl: null,
+  configuring: true,
   tab: 'search',
   query: '',
   searchResults: [],
@@ -522,773 +184,71 @@ let state = {
   toast: null,
   repName: '',
   pipelineStats: null,
-  pipelineLoading: false,
-  gapiInitialized: false,
-  authInitialized: false,
-  debugLogs: []
+  pipelineLoading: false
 };
 
-function addDebugLog(msg) {
-  state.debugLogs.push(new Date().toLocaleTimeString() + ': ' + msg);
-  console.log(msg);
-  if (state.debugLogs.length > 20) state.debugLogs.shift();
+function loadConfig(){
+  const cfg = storage.get(STORAGE_KEY);
+  state.scriptUrl = (cfg && cfg.scriptUrl) ? cfg.scriptUrl : DEFAULT_SCRIPT_URL;
+  const rep = storage.get('rep_name');
+  if(rep) state.repName = rep;
+  state.configuring = !state.scriptUrl;
   render();
-}
-
-// Google OAuth Functions
-function initGoogleAPI() {
-  if (state.gapiInitialized) return;
-  
-  addDebugLog('Initializing Google API...');
-  
-  gapi.load('client:auth2', function() {
-    addDebugLog('gapi loaded, initializing client...');
-    gapi.client.init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
-      discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES
-    }).then(function() {
-      state.gapiInitialized = true;
-      addDebugLog('✅ Google API initialized successfully!');
-      
-      gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-      
-      const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
-      addDebugLog('Initial sign-in status: ' + isSignedIn);
-      updateSigninStatus(isSignedIn);
-    }).catch(function(error) {
-      addDebugLog('❌ ERROR initializing Google API: ' + error.message);
-      showToast('Error: ' + error.message);
-    });
-  });
-}
-
-function updateSigninStatus(isSignedIn) {
-  addDebugLog('Sign-in status changed: ' + isSignedIn);
-  state.isSignedIn = isSignedIn;
-  state.authInitialized = true;
-  if (isSignedIn) {
-    const user = gapi.auth2.getAuthInstance().currentUser.get();
-    const profile = user.getBasicProfile();
-    state.userEmail = profile.getEmail();
-    state.userName = profile.getName();
-    state.repName = state.userName;
-    addDebugLog('✅ Signed in as: ' + state.userEmail);
-    render();
-    loadData();
-  } else {
-    state.userEmail = '';
-    state.userName = '';
-    render();
+  if(state.scriptUrl){
+    testConnection();
+    fetchMeetings();
+    fetchPipelineStats();
   }
 }
 
-function signIn() {
-  addDebugLog('🔑 Sign in button clicked');
-  
-  if (!state.gapiInitialized) {
-    addDebugLog('Google API not initialized, initializing...');
-    showToast('Loading Google API... Please wait.');
-    initGoogleAPI();
-    setTimeout(() => {
-      if (state.gapiInitialized) {
-        addDebugLog('API initialized, attempting sign in...');
-        gapi.auth2.getAuthInstance().signIn();
-      } else {
-        addDebugLog('API still not initialized, retrying...');
-        setTimeout(signIn, 2000);
-      }
-    }, 1500);
-    return;
-  }
-  
-  try {
-    addDebugLog('Attempting sign in...');
-    gapi.auth2.getAuthInstance().signIn()
-      .then(() => {
-        addDebugLog('✅ Sign in successful!');
-      })
-      .catch((error) => {
-        addDebugLog('❌ Sign in error: ' + JSON.stringify(error));
-        showToast('Sign in error: ' + (error.error || error.message || 'Unknown error'));
-      });
-  } catch (error) {
-    addDebugLog('❌ Sign in exception: ' + error.message);
-    showToast('Error: ' + error.message);
+async function testConnection(){
+  try{
+    const data = await apiGet('test', {});
+    if(data.success) showToast('Connected to sheet');
+    else showToast(data.error || 'Connected but sheet reported an error');
+  }catch(e){
+    showToast('Could not connect. Check the URL and deployment access.');
   }
 }
 
-function signOut() {
-  addDebugLog('🚪 Sign out clicked');
-  if (state.gapiInitialized) {
-    gapi.auth2.getAuthInstance().signOut();
-  }
-  state.isSignedIn = false;
-  state.userEmail = '';
-  state.userName = '';
+function saveScriptUrl(url){
+  storage.set(STORAGE_KEY, {scriptUrl: url});
+  state.scriptUrl = url;
+  state.configuring = false;
   render();
+  testConnection();
+  fetchMeetings();
+  fetchPipelineStats();
 }
 
-// Google Sheets API Functions
-async function getSheetData(sheetName, range = '') {
-  try {
-    const response = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: sheetName + (range ? '!' + range : '')
-    });
-    return response.result.values || [];
-  } catch (error) {
-    console.error('Error fetching sheet data:', error);
-    showToast('Error accessing sheet: ' + error.message);
-    return [];
-  }
+function saveRepName(name){
+  state.repName = name;
+  storage.set('rep_name', name);
 }
 
-async function appendToSheet(sheetName, values) {
-  try {
-    const response = await gapi.client.sheets.spreadsheets.values.append({
-      spreadsheetId: SPREADSHEET_ID,
-      range: sheetName,
-      valueInputOption: 'USER_ENTERED',
-      insertDataOption: 'INSERT_ROWS',
-      resource: {
-        values: [values]
-      }
-    });
-    return response.result;
-  } catch (error) {
-    console.error('Error appending to sheet:', error);
-    showToast('Error saving data: ' + error.message);
-    throw error;
-  }
-}
-
-async function updateSheet(sheetName, range, values) {
-  try {
-    const response = await gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: SPREADSHEET_ID,
-      range: sheetName + '!' + range,
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: [values]
-      }
-    });
-    return response.result;
-  } catch (error) {
-    console.error('Error updating sheet:', error);
-    showToast('Error updating data: ' + error.message);
-    throw error;
-  }
-}
-
-async function getMeetingsSheet() {
-  const meetingsSheetName = 'Meetings';
-  
-  try {
-    const response = await gapi.client.sheets.spreadsheets.get({
-      spreadsheetId: SPREADSHEET_ID
-    });
-    const sheets = response.result.sheets;
-    const hasMeetingsSheet = sheets.some(s => s.properties.title === meetingsSheetName);
-    
-    if (!hasMeetingsSheet) {
-      await gapi.client.sheets.spreadsheets.batchUpdate({
-        spreadsheetId: SPREADSHEET_ID,
-        resource: {
-          requests: [{
-            addSheet: {
-              properties: {
-                title: meetingsSheetName
-              }
-            }
-          }]
-        }
-      });
-      
-      await appendToSheet(meetingsSheetName, MEETING_HEADERS);
-      showToast('Meetings sheet created!');
-    }
-  } catch (error) {
-    console.error('Error creating Meetings sheet:', error);
-    showToast('Error: ' + error.message);
-  }
-  
-  return meetingsSheetName;
-}
-
-// Data functions
-async function searchLeads(query) {
-  const values = await getSheetData('LEADS');
-  if (!values || values.length < 2) return [];
-  
-  const q = query.trim().toLowerCase();
-  const results = [];
-  
-  for (let i = 1; i < values.length; i++) {
-    const row = values[i];
-    const name = String(row[LEAD_COLUMNS.name] || '');
-    const mobile = String(row[LEAD_COLUMNS.mobile] || '');
-    const email = String(row[LEAD_COLUMNS.email] || '');
-    const company = String(row[LEAD_COLUMNS.company] || '');
-    
-    const haystack = (name + ' ' + mobile + ' ' + email + ' ' + company).toLowerCase();
-    if (!q || haystack.indexOf(q) !== -1) {
-      results.push({
-        name: name,
-        mobile: mobile,
-        email: email,
-        company: company,
-      });
-    }
-    if (results.length >= 25) break;
-  }
-  return results;
-}
-
-async function listMeetings() {
-  const meetingsSheet = await getMeetingsSheet();
-  const values = await getSheetData(meetingsSheet);
-  if (!values || values.length < 2) return [];
-  
-  const headers = values[0];
-  const meetings = [];
-  for (let i = 1; i < values.length; i++) {
-    const row = values[i];
-    if (!row[0]) continue;
-    const obj = {};
-    headers.forEach((h, j) => obj[headerKey(h)] = row[j] || '');
-    meetings.push(obj);
-  }
-  return meetings.reverse();
-}
-
-function headerKey(h) {
-  return String(h).replace(/\s+/g, '').replace(/^./, c => c.toLowerCase());
-}
-
-async function bookMeeting(data) {
-  const meetingsSheet = await getMeetingsSheet();
-  const id = 'MTG-' + new Date().toISOString().slice(2,10).replace(/-/g,'') + 
-             new Date().toTimeString().slice(0,8).replace(/:/g,'');
-  const now = new Date().toISOString();
-  const initialStage = data.pipelineStage || 'Lead In';
-  
-  const row = [
-    id,
-    data.leadName || '',
-    data.mobile || '',
-    data.email || '',
-    data.company || '',
-    data.investmentAmount || '',
-    data.meetingDate || '',
-    data.meetingTime || '',
-    data.purpose || '',
-    'Scheduled',
-    initialStage,
-    now,
-    data.address || '',
-    data.latitude || '',
-    data.longitude || '',
-    data.notes || '',
-    now,
-    now,
-    data.updatedBy || ''
-  ];
-  
-  await appendToSheet(meetingsSheet, row);
-  return { success: true, meetingId: id };
-}
-
-async function updateMeeting(data) {
-  const meetingsSheet = await getMeetingsSheet();
-  const values = await getSheetData(meetingsSheet);
-  if (!values || values.length < 2) return { error: 'No meetings found' };
-  
-  const headers = values[0];
-  const idCol = 0;
-  let rowIndex = -1;
-  
-  for (let i = 1; i < values.length; i++) {
-    if (values[i][idCol] === data.meetingId) {
-      rowIndex = i;
-      break;
-    }
-  }
-  
-  if (rowIndex === -1) return { error: 'Meeting ID not found' };
-  
-  const row = values[rowIndex];
-  const rowNum = rowIndex + 1;
-  const updateMap = {
-    'Status': data.status,
-    'Pipeline Stage': data.pipelineStage,
-    'Investment Amount': data.investmentAmount,
-    'Address': data.address,
-    'Latitude': data.latitude,
-    'Longitude': data.longitude,
-    'Notes': data.notes,
-    'Last Updated At': new Date().toISOString(),
-    'Updated By': data.updatedBy,
-  };
-  
-  const updatedRow = [...row];
-  headers.forEach((h, j) => {
-    if (updateMap[h] !== undefined && updateMap[h] !== null && updateMap[h] !== '') {
-      updatedRow[j] = updateMap[h];
-    }
-  });
-  
-  const range = `A${rowNum}:${String.fromCharCode(65 + updatedRow.length - 1)}${rowNum}`;
-  await updateSheet(meetingsSheet, range, updatedRow);
-  return { success: true };
-}
-
-async function getPipelineStats() {
-  const meetings = await listMeetings();
-  if (!meetings || meetings.length === 0) {
-    return {
-      stats: {},
-      total: 0,
-      conversionRates: {},
-      stages: PIPELINE_STAGES,
-      winRate: '0%',
-      won: 0,
-      lost: 0,
-      totalInvestmentAmount: 0,
-      closedInvestmentAmount: 0
-    };
-  }
-  
-  const stats = {};
-  PIPELINE_STAGES.forEach(stage => stats[stage] = 0);
-  let totalAmount = 0;
-  let closedAmount = 0;
-  
-  meetings.forEach(m => {
-    const stage = m.pipelinestage || 'Lead In';
-    if (stats[stage] !== undefined) stats[stage]++;
-    const amount = parseFloat(m.investmentAmount) || 0;
-    totalAmount += amount;
-    if (stage === 'Client Onboarded') closedAmount += amount;
-  });
-  
-  const total = meetings.length;
-  const conversionRates = {};
-  for (const [stage, count] of Object.entries(stats)) {
-    conversionRates[stage] = total > 0 ? ((count / total) * 100).toFixed(1) + '%' : '0%';
-  }
-  
-  const won = stats['Client Onboarded'] || 0;
-  const lost = stats['Lost'] || 0;
-  const totalClosed = won + lost;
-  const winRate = totalClosed > 0 ? ((won / totalClosed) * 100).toFixed(1) + '%' : '0%';
-  
-  return {
-    stats: stats,
-    total: total,
-    conversionRates: conversionRates,
-    stages: PIPELINE_STAGES,
-    winRate: winRate,
-    won: won,
-    lost: lost,
-    totalInvestmentAmount: totalAmount,
-    closedInvestmentAmount: closedAmount
-  };
-}
-
-async function loadData() {
-  if (!state.isSignedIn) return;
-  
-  try {
-    await getMeetingsSheet();
-    await fetchMeetings();
-    await fetchPipelineStats();
-  } catch (error) {
-    console.error('Error loading data:', error);
-    showToast('Error loading data. Please check permissions.');
-  }
-}
-
-// UI Functions
 function showToast(msg, ms){
   state.toast = msg;
   render();
   setTimeout(()=>{ state.toast=null; render(); }, ms||2200);
 }
 
-function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function statusClass(s){
-  s = (s||'scheduled').toLowerCase();
-  if(s.indexOf('complet')!==-1 || s === 'completed') return 'completed';
-  if(s.indexOf('resched')!==-1) return 'rescheduled';
-  if(s.indexOf('cancel')!==-1) return 'cancelled';
-  if(s === 'lost') return 'lost';
-  if(s === 'new') return 'new';
-  return 'inprogress';
+async function apiGet(action, params){
+  const url = new URL(state.scriptUrl);
+  url.searchParams.set('action', action);
+  Object.keys(params||{}).forEach(k=>url.searchParams.set(k, params[k]));
+  const res = await fetch(url.toString());
+  return res.json();
 }
 
-// Render Functions
-function renderLogin() {
-  const debugHtml = state.debugLogs.length > 0 ? 
-    `<div class="debug-info">
-      <strong>Debug Log:</strong><br>
-      ${state.debugLogs.slice(-5).join('<br>')}
-      ${state.gapiInitialized ? '✅ API Initialized' : '⏳ Loading API...'}
-    </div>` : '';
-  
-  return `
-    <div class="topbar">
-      <div class="topbar-row">
-        <div class="brand">
-          <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none'">
-          <div class="brand-text">
-            <div class="brand-name">Client Meeting Tracker</div>
-            <div class="brand-sub">Vachana Investments Pvt Ltd</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="login-wrap">
-      <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="login-logo" onerror="this.style.display='none'">
-      <div class="login-title">Welcome to Vachana</div>
-      <div class="login-company">Client Meeting Tracker</div>
-      <div class="login-sub">
-        Sign in with your Google account to access client meetings.<br>
-        <small style="color:var(--muted);font-size:12px;">
-          Only users with access to the Google Sheet can sign in.
-        </small>
-      </div>
-      <button class="btn btn-gold" onclick="signIn()" style="max-width:280px;margin-top:24px;">
-        🔑 Sign in with Google
-      </button>
-      ${debugHtml}
-    </div>
-  `;
+async function apiPost(payload){
+  const res = await fetch(state.scriptUrl, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  });
+  return res.json();
 }
 
-function renderTopbar(title){
-  return `
-  <div class="topbar">
-    <div class="topbar-row">
-      <div class="brand">
-        <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none'">
-        <div class="brand-text">
-          <div class="brand-name">${title}</div>
-          <div class="brand-sub">Vachana Investments</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="user-info">
-          <span class="user-avatar">${state.userName ? state.userName.charAt(0).toUpperCase() : 'U'}</span>
-          <span style="font-size:10px;color:var(--muted);">${state.userEmail}</span>
-        </div>
-        <button class="icon-btn" onclick="signOut()" style="font-size:12px;" title="Sign Out">🚪</button>
-        <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">⚙️</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderSearchTab(){
-  let resultsHtml = '';
-  if(state.searching){
-    resultsHtml = `<div class="empty">Searching...</div>`;
-  } else if(state.query.trim() && state.searchResults.length===0){
-    resultsHtml = `<div class="empty">No clients match "${esc(state.query)}"</div>`;
-  } else if(state.searchResults.length){
-    resultsHtml = state.searchResults.map((c,i)=>{
-      return `
-      <div class="card clickable" onclick="handleOpenBooking(${i})">
-        <div class="client-row">
-          <div>
-            <div class="client-name">${esc(c.name)}</div>
-            <div class="client-sub">📱 ${esc(c.mobile)}${c.email? ' &middot; ✉️ '+esc(c.email):''}${c.company? ' &middot; 🏢 '+esc(c.company):''}</div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-  } else {
-    resultsHtml = `<div class="empty">🔍 Search by name, mobile number, or email to schedule a client meeting.</div>`;
-  }
-  return `
-  ${renderTopbar('Schedule Meeting')}
-  <div class="content">
-    <div class="search-box">
-      <span>🔍</span>
-      <input type="text" placeholder="Search clients..." value="${esc(state.query)}" oninput="onSearchInput(this.value)">
-    </div>
-    ${resultsHtml}
-  </div>`;
-}
-
-function renderPipelineDashboard() {
-  const stats = state.pipelineStats;
-  if (!stats || state.pipelineLoading) {
-    return `
-    <div class="pipeline-container">
-      <div class="empty" style="padding:20px;">
-        <div class="spinner"></div>
-        <div style="margin-top:8px;font-size:13px;">Loading pipeline...</div>
-      </div>
-    </div>`;
-  }
-  
-  const total = stats.total || 0;
-  const winRate = stats.winRate || '0%';
-  const totalAmount = stats.totalInvestmentAmount || 0;
-  
-  return `
-    <div class="pipeline-container">
-      <div class="pipeline-header">
-        <h3>📊 Client Pipeline</h3>
-        <button class="refresh-btn" onclick="fetchPipelineStats()" title="Refresh">🔄</button>
-      </div>
-      <div class="pipeline-stats-grid">
-        <div class="stat-card">
-          <div class="stat-value">${total}</div>
-          <div class="stat-label">Total Clients</div>
-        </div>
-        <div class="stat-card success">
-          <div class="stat-value">${winRate}</div>
-          <div class="stat-label">Conversion Rate</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">₹${totalAmount.toLocaleString()}</div>
-          <div class="stat-label">Pipeline Value</div>
-        </div>
-      </div>
-      <div class="pipeline-stages">
-        ${PIPELINE_STAGES.map(stage => {
-          const count = stats.stats?.[stage] || 0;
-          const percentage = stats.conversionRates?.[stage] || '0%';
-          const barWidth = total > 0 ? ((count / total) * 100) : 0;
-          const color = STAGE_COLORS[stage] || '#6B7280';
-          return `
-            <div class="stage-item">
-              <div class="stage-name">
-                <span class="stage-color-dot" style="background:${color}"></span>
-                ${stage}
-              </div>
-              <div class="stage-bar">
-                <div class="stage-fill" style="width: ${barWidth}%; background: ${color}"></div>
-              </div>
-              <div class="stage-count">${count} (${percentage})</div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-      ${stats.won || stats.lost ? `
-        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-around;font-size:12px;color:var(--muted);">
-          <span>✅ Onboarded: ${stats.won || 0}</span>
-          <span>❌ Lost: ${stats.lost || 0}</span>
-          <span>💰 Closed: ₹${(stats.closedInvestmentAmount || 0).toLocaleString()}</span>
-        </div>
-      ` : ''}
-      <div class="vachana-watermark">VACHANA INVESTMENTS</div>
-    </div>
-  `;
-}
-
-function renderMeetingsTab(){
-  let body;
-  if(state.meetingsLoading){
-    body = `<div class="empty">Loading meetings...</div>`;
-  } else if(!state.meetings.length){
-    body = `<div class="empty">📅 No meetings yet. Schedule one from Search.</div>`;
-  } else {
-    body = state.meetings.map((m,i)=>{
-      const stage = m.pipelinestage || 'Lead In';
-      const stageColor = STAGE_COLORS[stage] || '#6B7280';
-      const status = m.status || 'Scheduled';
-      return `
-      <div class="card clickable" onclick="handleOpenUpdate(${i})">
-        <div class="meeting-row">
-          <div class="meeting-main">
-            <div class="meeting-name">${esc(m.leadName)}</div>
-            <div class="meeting-meta">
-              <span>📅 ${esc(m.meetingDate)} ${esc(m.meetingTime)}</span>
-              ${m.investmentAmount ? `&middot; 💰 ₹${esc(m.investmentAmount)}` : ''}
-              <span class="stage-badge" style="background:${stageColor}20;color:${stageColor}">
-                <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${stageColor};margin-right:4px;"></span>
-                ${esc(stage)}
-              </span>
-            </div>
-          </div>
-          <span class="badge ${statusClass(status)}">${esc(status)}</span>
-        </div>
-      </div>`;
-    }).join('');
-  }
-  
-  return `
-  ${renderTopbar('Client Meetings')}
-  <div class="content">
-    ${renderPipelineDashboard()}
-    <div style="margin:16px 0 8px;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">📋 Recent Meetings</div>
-    ${body}
-  </div>`;
-}
-
-function renderBottomNav(){
-  return `
-  <div class="bottomnav">
-    <button class="navbtn ${state.tab==='search'?'active':''}" onclick="handleTab('search')">
-      <span class="dot">🔍</span> Schedule
-    </button>
-    <button class="navbtn ${state.tab==='meetings'?'active':''}" onclick="handleTab('meetings')">
-      <span class="dot">📊</span> Pipeline
-    </button>
-  </div>`;
-}
-
-function renderBookingSheet(){
-  if(!state.bookingClient) return '';
-  const c = state.bookingClient;
-  const today = new Date().toISOString().slice(0,10);
-  return `
-  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'booking')">
-    <div class="sheet" onclick="event.stopPropagation()">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title">📅 Schedule Client Meeting</div>
-      <div class="sheet-sub">${esc(c.name)} &middot; 📱 ${esc(c.mobile)}</div>
-      <label>Date</label>
-      <input type="date" id="bkDate" min="${today}" value="${today}">
-      <label>Time</label>
-      <input type="time" id="bkTime" value="10:00">
-      <label>Investment Amount (₹)</label>
-      <input type="number" id="bkAmount" class="amount-input" placeholder="e.g. 5000000">
-      <label>Meeting Purpose</label>
-      <select id="bkPurpose">
-        <option>Initial Client Consultation</option>
-        <option>Portfolio Review</option>
-        <option>Investment Proposal Presentation</option>
-        <option>Document Collection</option>
-        <option>KYC Verification</option>
-        <option>Follow-up Meeting</option>
-        <option>Client Onboarding</option>
-        <option>Other</option>
-      </select>
-      <label>Notes (optional)</label>
-      <textarea id="bkNotes" placeholder="Any important details about this client..."></textarea>
-      <button class="btn btn-gold" onclick="handleSubmitBooking()">📌 Confirm Booking</button>
-      <button class="btn btn-outline" onclick="handleCloseSheet('booking')">Cancel</button>
-    </div>
-  </div>`;
-}
-
-function renderUpdateSheet(){
-  if(!state.updatingMeeting) return '';
-  const m = state.updatingMeeting;
-  const statuses = ['Scheduled','Completed','Rescheduled','Cancelled','Lost'];
-  let gpsHtml;
-  if(state.gpsCapturing){
-    gpsHtml = `<div class="gps-box"><div class="pin pulse">📍</div><div>Getting your location...</div></div>`;
-  } else if(state.gps){
-    gpsHtml = `<div class="gps-box captured">
-      <div class="pin">📍</div>
-      <div>Location captured</div>
-      <div class="gps-coords">${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)}</div>
-      <div class="gps-addr">${esc(state.gps.address)}</div>
-    </div>`;
-  } else {
-    gpsHtml = `<div class="gps-box">
-      <div class="pin">📍</div>
-      <div style="margin-bottom:8px;">No location captured yet</div>
-      <button class="btn btn-outline" style="margin-top:0;" onclick="captureLocation()">Capture my location</button>
-    </div>`;
-  }
-  
-  const stageOptions = PIPELINE_STAGES.map(stage => {
-    const currentStage = m.pipelinestage || 'Lead In';
-    return `<option value="${stage}" ${stage === currentStage ? 'selected' : ''}>${stage}</option>`;
-  }).join('');
-  
-  return `
-  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'update')">
-    <div class="sheet" onclick="event.stopPropagation()">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title">📝 Update Meeting</div>
-      <div class="sheet-sub">${esc(m.leadName)} &middot; 📅 ${esc(m.meetingDate)} ${esc(m.meetingTime)}</div>
-      <label>Pipeline Stage</label>
-      <select id="upStage">
-        ${stageOptions}
-      </select>
-      <label>Status</label>
-      <select id="upStatus">
-        ${statuses.map(s=>`<option ${((m.status||'Scheduled')===s)?'selected':''}>${s}</option>`).join('')}
-      </select>
-      <label>Investment Amount (₹)</label>
-      <input type="number" id="upAmount" class="amount-input" value="${esc(m.investmentAmount || '')}" placeholder="Update investment amount">
-      <label>Notes</label>
-      <textarea id="upNotes" placeholder="Meeting outcome, next steps...">${esc(m.notes||'')}</textarea>
-      ${gpsHtml}
-      <button class="btn btn-primary" onclick="handleSubmitUpdate()">💾 Save Update</button>
-      <button class="btn btn-outline" onclick="handleCloseSheet('update')">Cancel</button>
-    </div>
-  </div>`;
-}
-
-function renderToast(){
-  if(!state.toast) return '';
-  return `<div class="toast">${esc(state.toast)}</div>`;
-}
-
-// Event Handlers
-window.handleOpenSettings = function(){
-  showToast('Signed in as: ' + state.userEmail + ' | Sheet: Vachana Meetings');
-};
-
-window.handleTab = function(t){
-  state.tab = t;
-  if(t==='meetings') {
-    fetchMeetings();
-    fetchPipelineStats();
-  }
-  render();
-};
-
-window.handleOpenBooking = function(i){
-  openBooking(state.searchResults[i]);
-};
-
-window.handleOpenUpdate = function(i){
-  openUpdate(state.meetings[i]);
-};
-
-window.handleSubmitBooking = function(){
-  const form = {
-    date: document.getElementById('bkDate').value,
-    time: document.getElementById('bkTime').value,
-    amount: document.getElementById('bkAmount').value,
-    purpose: document.getElementById('bkPurpose').value,
-    notes: document.getElementById('bkNotes').value,
-  };
-  if(!form.date || !form.time){ showToast('Pick a date and time'); return; }
-  submitBooking(form);
-};
-
-window.handleSubmitUpdate = function(){
-  const form = {
-    status: document.getElementById('upStatus').value,
-    notes: document.getElementById('upNotes').value,
-    amount: document.getElementById('upAmount').value,
-  };
-  submitUpdate(form);
-};
-
-window.handleCloseSheet = function(which){
-  if(which==='booking') state.bookingClient = null;
-  if(which==='update'){ state.updatingMeeting = null; state.gps = null; }
-  render();
-};
-
-window.handleCloseSheetBg = function(e, which){
-  if(e.target.classList.contains('sheet-overlay')) handleCloseSheet(which);
-};
-
-// Search and Data Functions
 let searchDebounce;
 function onSearchInput(val){
   state.query = val;
@@ -1298,9 +258,10 @@ function onSearchInput(val){
   searchDebounce = setTimeout(async ()=>{
     state.searching = true; render();
     try{
-      state.searchResults = await searchLeads(val);
+      const data = await apiGet('search', {q: val});
+      state.searchResults = data.results || [];
     }catch(e){
-      showToast('Error searching: ' + e.message);
+      showToast('Could not reach the sheet. Check settings.');
     }
     state.searching = false;
     render();
@@ -1310,9 +271,10 @@ function onSearchInput(val){
 async function fetchMeetings(){
   state.meetingsLoading = true; render();
   try{
-    state.meetings = await listMeetings();
+    const data = await apiGet('list', {});
+    state.meetings = data.meetings || [];
   }catch(e){
-    showToast('Could not load meetings: ' + e.message);
+    showToast('Could not load meetings.');
   }
   state.meetingsLoading = false;
   render();
@@ -1321,9 +283,10 @@ async function fetchMeetings(){
 async function fetchPipelineStats(){
   state.pipelineLoading = true; render();
   try{
-    state.pipelineStats = await getPipelineStats();
+    const data = await apiGet('pipeline', {});
+    state.pipelineStats = data;
   }catch(e){
-    console.error('Pipeline stats error:', e);
+    console.error('Pipeline stats error', e);
   }
   state.pipelineLoading = false;
   render();
@@ -1336,25 +299,27 @@ function openBooking(client){
 
 async function submitBooking(form){
   const payload = {
+    action:'book',
+    clientCode: state.bookingClient.clientCode || '',
     leadName: state.bookingClient.name,
     mobile: state.bookingClient.mobile,
-    email: state.bookingClient.email,
-    company: state.bookingClient.company || '',
+    email: state.bookingClient.email || '',
+    leadSource: state.bookingClient.leadSource || '',
     investmentAmount: form.amount || '',
     meetingDate: form.date,
     meetingTime: form.time,
     purpose: form.purpose,
     pipelineStage: 'Meeting Scheduled',
     notes: form.notes,
-    updatedBy: state.repName || state.userEmail || '',
+    updatedBy: state.repName || ''
   };
-  showToast('Booking meeting...', 30000);
+  showToast('Booking meeting...', 60000);
   try{
-    const res = await bookMeeting(payload);
+    const res = await apiPost(payload);
     if(res.success){
       state.bookingClient = null;
       state.query=''; state.searchResults=[];
-      showToast('Meeting booked! 🎉');
+      showToast('Meeting booked');
       fetchMeetings();
       fetchPipelineStats();
       state.tab='meetings';
@@ -1362,7 +327,7 @@ async function submitBooking(form){
       showToast(res.error || 'Could not book meeting');
     }
   }catch(e){
-    showToast('Error: ' + e.message);
+    showToast('Network error while booking');
   }
   render();
 }
@@ -1402,67 +367,352 @@ function captureLocation(){
 
 async function submitUpdate(form){
   const payload = {
-    meetingId: state.updatingMeeting.meetingID || state.updatingMeeting['meetingID'],
+    action:'update',
+    meetingId: state.updatingMeeting.meetingID,
     status: form.status,
     notes: form.notes,
     investmentAmount: form.amount,
     address: state.gps ? state.gps.address : '',
     latitude: state.gps ? state.gps.lat : '',
     longitude: state.gps ? state.gps.lng : '',
-    updatedBy: state.repName || state.userEmail || '',
+    updatedBy: state.repName || ''
   };
-  showToast('Saving update...', 30000);
+  showToast('Saving update...', 60000);
   try{
-    const res = await updateMeeting(payload);
+    const res = await apiPost(payload);
     if(res.success){
-      state.updatingMeeting = null;
-      state.gps = null;
-      showToast('Meeting updated ✅');
-      fetchMeetings();
-      fetchPipelineStats();
+      showToast('Meeting updated');
+      return true;
     }else{
       showToast(res.error || 'Could not update meeting');
+      return false;
     }
   }catch(e){
-    showToast('Error: ' + e.message);
+    showToast('Network error while updating');
+    return false;
+  }
+}
+
+async function updatePipelineStage(meetingId, newStage){
+  try{
+    const res = await apiPost({ action:'updateStage', meetingId: meetingId, pipelineStage: newStage, updatedBy: state.repName || '' });
+    if(!res.success) showToast(res.error || 'Could not update stage');
+  }catch(e){
+    showToast('Network error while updating stage');
+  }
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function statusClass(s){
+  s = (s||'scheduled').toLowerCase();
+  if(s.indexOf('complet')!==-1) return 'completed';
+  if(s.indexOf('resched')!==-1) return 'rescheduled';
+  if(s.indexOf('cancel')!==-1) return 'cancelled';
+  if(s==='lost') return 'lost';
+  return 'scheduled';
+}
+
+const LOGO_URL = 'https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png';
+
+function renderConfig(){
+  return `
+  <div class="topbar"><div class="topbar-row"><div class="brand">
+    <img src="${LOGO_URL}" alt="Vachana" class="brand-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <div class="brand-mark" style="display:none;">V</div>
+    <div class="brand-text"><div class="brand-name">Vachana Tracker</div><div class="brand-sub">Investments Pvt Ltd</div></div></div></div></div>
+  <div class="config-wrap">
+    <img src="${LOGO_URL}" alt="Vachana Investments" class="login-logo" onerror="this.style.display='none';document.getElementById('cfgFallbackLogo').style.display='flex';">
+    <div class="config-logo" id="cfgFallbackLogo" style="display:none;">V</div>
+    <div class="config-title">Connect your sheet</div>
+    <div class="config-sub">Paste the Apps Script web app URL from your Google Sheet. One-time setup per device.</div>
+    <label>Web app URL</label>
+    <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(state.scriptUrl||'')}">
+    <label>Your name (for update history)</label>
+    <input type="text" id="cfgName" placeholder="e.g. Rahul Sharma" value="${esc(state.repName)}">
+    <button class="btn btn-gold" onclick="handleSaveConfig()">Save and continue</button>
+  </div>`;
+}
+
+window.handleSaveConfig = function(){
+  const url = document.getElementById('cfgUrl').value.trim();
+  const name = document.getElementById('cfgName').value.trim();
+  if(!url){ showToast('Paste the web app URL first'); return; }
+  saveRepName(name);
+  saveScriptUrl(url);
+};
+
+function renderTopbar(title){
+  return `
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <img src="${LOGO_URL}" alt="Vachana" class="brand-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="brand-mark" style="display:none;">V</div>
+        <div class="brand-text"><div class="brand-name">${title}</div><div class="brand-sub">Vachana Investments</div></div>
+      </div>
+      <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">&#9881;</button>
+    </div>
+  </div>`;
+}
+
+window.handleOpenSettings = function(){
+  state.configuring = true;
+  render();
+};
+
+function renderSearchTab(){
+  let resultsHtml = '';
+  if(state.searching){
+    resultsHtml = `<div class="empty">Searching...</div>`;
+  } else if(state.query.trim() && state.searchResults.length===0){
+    resultsHtml = `<div class="empty">No leads match "${esc(state.query)}"</div>`;
+  } else if(state.searchResults.length){
+    resultsHtml = state.searchResults.map((c,i)=>{
+      const tag = c.clientCode || c.leadSource || '';
+      return `
+      <div class="card" onclick="handleOpenBooking(${i})">
+        <div class="client-row">
+          <div>
+            <div class="client-name">${esc(c.name)}</div>
+            <div class="client-sub">${esc(c.mobile)}${c.email? ' &middot; '+esc(c.email):''}</div>
+          </div>
+          ${tag? `<div class="badge scheduled">${esc(tag)}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    resultsHtml = `<div class="empty">Search by name, mobile number, or email to book a meeting.</div>`;
+  }
+  return renderTopbar('Search &amp; book') + `
+  <div class="content">
+    <div class="search-box"><span>&#128269;</span><input type="text" placeholder="Search leads..." value="${esc(state.query)}" oninput="onSearchInput(this.value)"></div>
+    ${resultsHtml}
+  </div>`;
+}
+
+function renderPipelineDashboard(){
+  const stats = state.pipelineStats;
+  if(!stats || state.pipelineLoading){
+    return `<div class="pipeline-container"><div class="empty">Loading pipeline...</div></div>`;
+  }
+  const total = stats.total || 0;
+  const winRate = stats.winRate || '0%';
+  const totalAmount = Number(stats.totalInvestmentAmount || 0);
+  const stagesHtml = PIPELINE_STAGES.map(stage=>{
+    const count = (stats.stats && stats.stats[stage]) || 0;
+    const pct = (stats.conversionRates && stats.conversionRates[stage]) || '0%';
+    const barWidth = total > 0 ? Math.round((count/total)*100) : 0;
+    const color = STAGE_COLORS[stage] || '#6B7280';
+    return `
+      <div class="stage-item">
+        <div class="stage-name"><span class="stage-color-dot" style="background:${color}"></span>${stage}</div>
+        <div class="stage-bar"><div class="stage-fill" style="width:${barWidth}%;background:${color}"></div></div>
+        <div class="stage-count">${count} (${pct})</div>
+      </div>`;
+  }).join('');
+  return `
+  <div class="pipeline-container">
+    <div class="pipeline-header"><h3>Pipeline overview</h3><button class="refresh-btn" onclick="fetchPipelineStats()" aria-label="Refresh">&#8635;</button></div>
+    <div class="pipeline-stats-grid">
+      <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total leads</div></div>
+      <div class="stat-card success"><div class="stat-value">${winRate}</div><div class="stat-label">Win rate</div></div>
+      <div class="stat-card"><div class="stat-value">&#8377;${totalAmount.toLocaleString('en-IN')}</div><div class="stat-label">Pipeline value</div></div>
+    </div>
+    <div class="pipeline-stages">${stagesHtml}</div>
+  </div>`;
+}
+
+function renderMeetingsTab(){
+  let body;
+  if(state.meetingsLoading){
+    body = `<div class="empty">Loading meetings...</div>`;
+  } else if(!state.meetings.length){
+    body = `<div class="empty">No meetings yet. Book one from Search.</div>`;
+  } else {
+    body = state.meetings.map((m,i)=>{
+      const stage = m.pipelineStage || 'Lead In';
+      const color = STAGE_COLORS[stage] || '#6B7280';
+      const status = m.status || 'Scheduled';
+      const hasLocation = m.latitude && m.longitude;
+      const mapLink = hasLocation ? `https://www.google.com/maps?q=${m.latitude},${m.longitude}` : null;
+      const notesPreview = m.notes ? (String(m.notes).length > 60 ? esc(m.notes).slice(0,60)+'...' : esc(m.notes)) : '';
+      return `
+      <div class="card" onclick="handleOpenUpdate(${i})">
+        <div class="meeting-row">
+          <div class="meeting-main">
+            <div class="meeting-name">${esc(m.leadName)}</div>
+            <div class="meeting-meta">
+              <span>${esc(m.meetingDate)} ${esc(m.meetingTime)}</span>
+              ${m.investmentAmount? ` &middot; <span>&#8377;${esc(m.investmentAmount)}</span>` : ''}
+              <span class="stage-badge" style="background:${color}22;color:${color}">${esc(stage)}</span>
+            </div>
+            ${m.address? `<div class="meeting-location">&#128205; ${esc(m.address)}${mapLink? ` &middot; <a href="${mapLink}" target="_blank" onclick="event.stopPropagation()">View on map</a>`:''}</div>` : ''}
+            ${notesPreview? `<div class="meeting-notes-preview">${notesPreview}</div>` : ''}
+          </div>
+          <span class="badge ${statusClass(status)}">${esc(status)}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  return renderTopbar('Pipeline') + `
+  <div class="content">
+    ${renderPipelineDashboard()}
+    <div class="section-label">Recent meetings</div>
+    ${body}
+  </div>`;
+}
+
+function renderBottomNav(){
+  return `
+  <div class="bottomnav">
+    <button class="navbtn ${state.tab==='search'?'active':''}" onclick="handleTab('search')"><span class="dot">&#128269;</span>Search &amp; book</button>
+    <button class="navbtn ${state.tab==='meetings'?'active':''}" onclick="handleTab('meetings')"><span class="dot">&#128202;</span>Pipeline</button>
+  </div>`;
+}
+
+window.handleTab = function(t){
+  state.tab = t;
+  if(t==='meetings'){ fetchMeetings(); fetchPipelineStats(); }
+  render();
+};
+
+window.handleOpenBooking = function(i){ openBooking(state.searchResults[i]); };
+window.handleOpenUpdate = function(i){ openUpdate(state.meetings[i]); };
+
+function renderBookingSheet(){
+  if(!state.bookingClient) return '';
+  const c = state.bookingClient;
+  const today = new Date().toISOString().slice(0,10);
+  return `
+  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'booking')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Book meeting</div>
+      <div class="sheet-sub">${esc(c.name)} &middot; ${esc(c.mobile)}</div>
+      <label>Date</label><input type="date" id="bkDate" min="${today}" value="${today}">
+      <label>Time</label><input type="time" id="bkTime" value="10:00">
+      <label>Investment amount (&#8377;)</label><input type="number" id="bkAmount" class="amount-input" placeholder="e.g. 500000">
+      <label>Purpose</label>
+      <select id="bkPurpose">
+        <option>Initial investment discussion</option>
+        <option>Portfolio review</option>
+        <option>Investment proposal presentation</option>
+        <option>Document collection</option>
+        <option>KYC verification</option>
+        <option>Follow-up meeting</option>
+        <option>Other</option>
+      </select>
+      <label>Comment (optional)</label><textarea id="bkNotes" placeholder="Anything the team should know"></textarea>
+      <button class="btn btn-gold" onclick="handleSubmitBooking()">Confirm booking</button>
+      <button class="btn btn-outline" onclick="handleCloseSheet('booking')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+window.handleSubmitBooking = function(){
+  const form = {
+    date: document.getElementById('bkDate').value,
+    time: document.getElementById('bkTime').value,
+    amount: document.getElementById('bkAmount').value,
+    purpose: document.getElementById('bkPurpose').value,
+    notes: document.getElementById('bkNotes').value
+  };
+  if(!form.date || !form.time){ showToast('Pick a date and time'); return; }
+  submitBooking(form);
+};
+
+window.handleCloseSheet = function(which){
+  if(which==='booking') state.bookingClient = null;
+  if(which==='update'){ state.updatingMeeting = null; state.gps = null; }
+  render();
+};
+window.handleCloseSheetBg = function(e, which){
+  if(e.target.classList.contains('sheet-overlay')) handleCloseSheet(which);
+};
+
+function renderUpdateSheet(){
+  if(!state.updatingMeeting) return '';
+  const m = state.updatingMeeting;
+  const statuses = ['Scheduled','Completed','Rescheduled','Cancelled'];
+  const currentStage = m.pipelineStage || 'Meeting Scheduled';
+  const stageOptions = PIPELINE_STAGES.map(s=>`<option ${s===currentStage?'selected':''}>${s}</option>`).join('');
+  let gpsHtml;
+  if(state.gpsCapturing){
+    gpsHtml = `<div class="gps-box"><div class="pin pulse">&#128205;</div><div>Getting your location...</div></div>`;
+  } else if(state.gps){
+    gpsHtml = `
+      <div class="gps-box captured">
+        <div class="pin">&#128205;</div>
+        <div>Location captured</div>
+        <div class="gps-coords">${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)}</div>
+        <div class="gps-addr">${esc(state.gps.address)}</div>
+      </div>`;
+  } else {
+    gpsHtml = `
+      <div class="gps-box">
+        <div class="pin">&#128205;</div>
+        <div style="margin-bottom:8px;">No location captured yet</div>
+        <button class="btn btn-outline" style="margin-top:0;" onclick="captureLocation()">Capture my location</button>
+      </div>`;
+  }
+  return `
+  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'update')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Update meeting</div>
+      <div class="sheet-sub">${esc(m.leadName)} &middot; ${esc(m.meetingDate)} ${esc(m.meetingTime)}</div>
+      <label>Pipeline stage</label>
+      <select id="upStage">${stageOptions}</select>
+      <label>Status</label>
+      <select id="upStatus">${statuses.map(s=>`<option ${((m.status||'Scheduled')===s)?'selected':''}>${s}</option>`).join('')}</select>
+      <label>Investment amount (&#8377;)</label>
+      <input type="number" id="upAmount" class="amount-input" value="${esc(m.investmentAmount||'')}">
+      <label>Comment</label>
+      <textarea id="upNotes" placeholder="Meeting outcome, next steps...">${esc(m.notes||'')}</textarea>
+      ${gpsHtml}
+      <button class="btn btn-primary" onclick="handleSubmitUpdate()">Save update</button>
+      <button class="btn btn-outline" onclick="handleCloseSheet('update')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+window.handleSubmitUpdate = async function(){
+  const newStage = document.getElementById('upStage').value;
+  const form = {
+    status: document.getElementById('upStatus').value,
+    amount: document.getElementById('upAmount').value,
+    notes: document.getElementById('upNotes').value
+  };
+  const meetingId = state.updatingMeeting.meetingID;
+  const prevStage = state.updatingMeeting.pipelineStage || 'Meeting Scheduled';
+  showToast('Saving update...', 60000);
+  const ok = await submitUpdate(form);
+  if(ok && newStage !== prevStage){
+    await updatePipelineStage(meetingId, newStage);
+  }
+  if(ok){
+    state.updatingMeeting = null;
+    state.gps = null;
+    fetchMeetings();
+    fetchPipelineStats();
   }
   render();
+};
+
+function renderToast(){
+  if(!state.toast) return '';
+  return `<div class="toast">${esc(state.toast)}</div>`;
 }
 
 function render(){
   const app = document.getElementById('app');
-  
-  if (!state.isSignedIn) {
-    app.innerHTML = renderLogin();
-    return;
-  }
-  
-  let body = state.tab==='search' ? renderSearchTab() : renderMeetingsTab();
-  app.innerHTML = `
-    ${body}
-    ${renderBottomNav()}
-    ${renderBookingSheet()}
-    ${renderUpdateSheet()}
-    ${renderToast()}
-  `;
+  if(state.configuring){ app.innerHTML = renderConfig(); return; }
+  const body = state.tab==='search' ? renderSearchTab() : renderMeetingsTab();
+  app.innerHTML = body + renderBottomNav() + renderBookingSheet() + renderUpdateSheet() + renderToast();
 }
 
-// Initialize
-function init() {
-  addDebugLog('🚀 App starting...');
-  addDebugLog('📊 SPREADSHEET_ID: ' + SPREADSHEET_ID);
-  addDebugLog('🔑 CLIENT_ID: ' + CLIENT_ID.substring(0, 20) + '...');
-  
-  if (typeof gapi !== 'undefined') {
-    addDebugLog('✅ gapi found, initializing...');
-    initGoogleAPI();
-  } else {
-    addDebugLog('⏳ gapi not found, waiting...');
-    setTimeout(init, 1000);
-  }
-}
-
-init();
+loadConfig();
 </script>
 </body>
 </html>
