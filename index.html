@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Lead Meeting Tracker</title>
+<title>Vachana - Client Meeting Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#16233F;
-    --navy-2:#1E2E52;
-    --amber:#E8A33D;
-    --amber-dark:#B5761A;
-    --bg:#F3F5F8;
+    --navy:#0A1628;
+    --navy-2:#142840;
+    --gold:#C9A84C;
+    --gold-light:#E8D5A3;
+    --gold-dark:#A8893A;
+    --bg:#F5F3F0;
     --surface:#FFFFFF;
     --text:#1A2233;
     --muted:#6B7280;
@@ -27,29 +28,104 @@
     --info:#2563A8;
     --info-bg:#E7F0FA;
     --radius:14px;
+    --shadow:0 2px 8px rgba(0,0,0,0.06);
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);}
   #app{max-width:440px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative;}
 
-  .topbar{background:var(--navy);color:#fff;padding:18px 18px 16px;position:sticky;top:0;z-index:10;}
+  .topbar{
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color:#fff;
+    padding:14px 18px 12px;
+    position:sticky;
+    top:0;
+    z-index:10;
+    border-bottom: 2px solid var(--gold);
+  }
   .topbar-row{display:flex;align-items:center;justify-content:space-between;}
-  .brand{display:flex;align-items:center;gap:10px;}
-  .brand-mark{width:32px;height:32px;border-radius:8px;background:var(--amber);display:flex;align-items:center;justify-content:center;color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:14px;}
-  .brand-name{font-family:'Sora',sans-serif;font-weight:600;font-size:16px;letter-spacing:0.2px;}
-  .icon-btn{background:rgba(255,255,255,0.1);border:none;color:#fff;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-logo{
+    height:40px;
+    width:auto;
+    object-fit:contain;
+  }
+  .brand-text{display:flex;flex-direction:column;}
+  .brand-name{
+    font-family:'Sora',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:0.3px;
+    color:#fff;
+  }
+  .brand-sub{
+    font-size:9px;
+    opacity:0.7;
+    font-weight:400;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+  }
+  .icon-btn{
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.15);
+    color:#fff;
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    transition:all 0.2s;
+  }
   .icon-btn:active{background:rgba(255,255,255,0.2);}
 
   .content{flex:1;padding:16px 16px 90px;}
 
-  .search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:10px 14px;border:1px solid var(--line);margin-bottom:14px;}
-  .search-box input{border:none;outline:none;flex:1;font-size:15px;font-family:'Inter',sans-serif;background:transparent;color:var(--text);}
+  .search-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--surface);
+    border-radius:12px;
+    padding:10px 14px;
+    border:2px solid var(--gold-light);
+    margin-bottom:14px;
+    transition:border-color 0.3s;
+  }
+  .search-box:focus-within{border-color:var(--gold);}
+  .search-box input{
+    border:none;
+    outline:none;
+    flex:1;
+    font-size:15px;
+    font-family:'Inter',sans-serif;
+    background:transparent;
+    color:var(--text);
+  }
   .search-box input::placeholder{color:var(--muted);}
 
-  .section-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin:18px 0 8px;}
+  .section-label{
+    font-size:12px;
+    font-weight:600;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    margin:18px 0 8px;
+  }
 
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer;}
-  .card:active{transform:scale(0.99);}
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition:all 0.15s;
+    border-left: 3px solid var(--gold);
+  }
+  .card:active{transform:scale(0.98);}
   .client-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
   .client-name{font-weight:600;font-size:15px;}
   .client-sub{font-size:13px;color:var(--muted);margin-top:2px;}
@@ -63,36 +139,140 @@
   .badge.completed{background:var(--success-bg);color:var(--success);}
   .badge.rescheduled{background:var(--warn-bg);color:var(--warn);}
   .badge.cancelled{background:var(--danger-bg);color:var(--danger);}
-  .badge.pipeline{background:var(--warn-bg);color:var(--warn);}
+  .badge.lost{background:var(--danger-bg);color:var(--danger);}
+  .badge.inprogress{background:var(--warn-bg);color:var(--warn);}
+  .badge.new{background:var(--info-bg);color:var(--info);}
+  
+  .stage-badge{
+    font-size:10px;
+    padding:2px 8px;
+    border-radius:12px;
+    font-weight:500;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+  }
 
   .empty{text-align:center;padding:50px 20px;color:var(--muted);}
   .empty i{font-size:30px;display:block;margin-bottom:10px;opacity:0.5;}
 
-  .bottomnav{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;max-width:440px;margin:0 auto;width:100%;}
-  .navbtn{flex:1;border:none;background:none;padding:11px 0 9px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-family:'Inter',sans-serif;font-size:11px;font-weight:500;cursor:pointer;}
-  .navbtn.active{color:var(--navy);}
+  .bottomnav{
+    position:sticky;
+    bottom:0;
+    background:var(--surface);
+    border-top:2px solid var(--gold-light);
+    display:flex;
+    max-width:440px;
+    margin:0 auto;
+    width:100%;
+    z-index:10;
+  }
+  .navbtn{
+    flex:1;
+    border:none;
+    background:none;
+    padding:11px 0 9px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    color:var(--muted);
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    font-weight:500;
+    cursor:pointer;
+    transition:color 0.2s;
+    position:relative;
+  }
+  .navbtn.active{
+    color:var(--navy);
+  }
+  .navbtn.active::after{
+    content:'';
+    position:absolute;
+    top:-2px;
+    left:30%;
+    right:30%;
+    height:3px;
+    background:var(--gold);
+    border-radius:0 0 3px 3px;
+  }
   .navbtn .dot{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 
-  .sheet-overlay{position:fixed;inset:0;background:rgba(15,20,35,0.5);display:flex;align-items:flex-end;z-index:50;}
-  .sheet{background:var(--surface);width:100%;max-width:440px;margin:0 auto;border-radius:20px 20px 0 0;padding:20px 18px 24px;max-height:88vh;overflow-y:auto;}
+  .sheet-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(10,22,40,0.6);
+    display:flex;
+    align-items:flex-end;
+    z-index:50;
+    animation:fadeIn 0.2s ease-out;
+  }
+  .sheet{
+    background:var(--surface);
+    width:100%;
+    max-width:440px;
+    margin:0 auto;
+    border-radius:20px 20px 0 0;
+    padding:20px 18px 24px;
+    max-height:88vh;
+    overflow-y:auto;
+    animation:slideUp 0.3s ease-out;
+    border-top: 3px solid var(--gold);
+  }
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
   .sheet-handle{width:36px;height:4px;background:var(--line);border-radius:3px;margin:0 auto 14px;}
-  .sheet-title{font-family:'Sora',sans-serif;font-weight:600;font-size:17px;margin-bottom:2px;}
+  .sheet-title{
+    font-family:'Sora',sans-serif;
+    font-weight:600;
+    font-size:17px;
+    margin-bottom:2px;
+    color:var(--navy);
+  }
   .sheet-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
 
   label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 5px;}
-  input[type=text],input[type=date],input[type=time],select,textarea{
-    width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:#fff;outline:none;
+  input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{
+    width:100%;
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:14px;
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    background:#fff;
+    outline:none;
+    transition:border-color 0.2s;
   }
-  input:focus,select:focus,textarea:focus{border-color:var(--navy-2);}
+  input:focus,select:focus,textarea:focus{border-color:var(--gold);}
   textarea{resize:vertical;min-height:60px;}
 
-  .btn{width:100%;padding:13px;border-radius:11px;border:none;font-family:'Inter',sans-serif;font-weight:600;font-size:15px;cursor:pointer;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .btn{
+    width:100%;
+    padding:13px;
+    border-radius:11px;
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:all 0.15s;
+  }
   .btn-primary{background:var(--navy);color:#fff;}
   .btn-primary:active{background:var(--navy-2);}
-  .btn-amber{background:var(--amber);color:var(--navy);}
-  .btn-amber:active{background:var(--amber-dark);color:#fff;}
-  .btn-outline{background:none;border:1px solid var(--line);color:var(--text);}
-  .btn:disabled{opacity:0.5;}
+  .btn-gold{background:var(--gold);color:var(--navy);}
+  .btn-gold:active{background:var(--gold-dark);color:#fff;}
+  .btn-outline{background:none;border:2px solid var(--line);color:var(--text);}
+  .btn-outline:active{background:var(--bg);}
+  .btn-success{background:var(--success);color:#fff;}
+  .btn-success:active{background:#168a54;}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;}
 
   .gps-box{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:14px;text-align:center;}
   .gps-box.captured{border-style:solid;border-color:var(--success);background:var(--success-bg);}
@@ -102,23 +282,115 @@
   .pin.pulse::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--success);animation:pulse 1.4s ease-out infinite;}
   @keyframes pulse{0%{transform:scale(0.7);opacity:1;}100%{transform:scale(1.6);opacity:0;}}
 
-  .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:100;max-width:80%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.2);}
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:100px;
+    transform:translateX(-50%);
+    background:var(--navy);
+    color:#fff;
+    padding:11px 18px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:500;
+    z-index:100;
+    max-width:80%;
+    text-align:center;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+    animation:slideUp 0.3s ease-out;
+    border-left: 3px solid var(--gold);
+  }
 
   .config-wrap{padding:40px 22px;}
-  .config-logo{width:56px;height:56px;border-radius:16px;background:var(--amber);display:flex;align-items:center;justify-content:center;color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:22px;margin:0 auto 18px;}
-  .config-title{font-family:'Sora',sans-serif;font-weight:700;font-size:20px;text-align:center;}
-  .config-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5;}
-  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
+  .config-logo{
+    width:120px;
+    height:auto;
+    margin:0 auto 18px;
+    display:block;
+    border-radius:12px;
+    box-shadow:0 4px 20px rgba(201,168,76,0.2);
+    background:var(--surface);
+    padding:16px;
+  }
+  .config-title{
+    font-family:'Sora',sans-serif;
+    font-weight:700;
+    font-size:22px;
+    text-align:center;
+    color:var(--navy);
+  }
+  .config-sub{
+    font-size:13px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:6px;
+    line-height:1.5;
+  }
+  .config-company{
+    text-align:center;
+    font-size:11px;
+    color:var(--gold-dark);
+    font-weight:600;
+    margin-top:4px;
+    letter-spacing:1px;
+  }
+  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
   @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* Pipeline Dashboard Styles */
+  .pipeline-container{
+    background:var(--surface);
+    border-radius:var(--radius);
+    padding:16px;
+    border:2px solid var(--gold-light);
+  }
+  .pipeline-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-card{background:var(--bg);border-radius:10px;padding:12px;text-align:center;}
+  .stat-card.success{background:var(--success-bg);}
+  .stat-value{font-size:20px;font-weight:700;font-family:'Sora',sans-serif;color:var(--navy);}
+  .stat-card.success .stat-value{color:var(--success);}
+  .stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;font-weight:600;}
   
-  .stage-badge{font-size:10px;padding:2px 8px;border-radius:12px;background:var(--warn-bg);color:var(--warn);}
+  .pipeline-stages{margin-top:12px;}
+  .stage-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);}
+  .stage-item:last-child{border-bottom:none;}
+  .stage-name{font-size:12px;font-weight:500;min-width:100px;color:var(--text);display:flex;align-items:center;gap:4px;}
+  .stage-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;}
+  .stage-fill{height:100%;border-radius:3px;transition:width 0.5s ease;}
+  .stage-count{font-size:11px;color:var(--muted);min-width:50px;text-align:right;font-weight:500;}
+
+  .pipeline-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .pipeline-header h3{margin:0;font-family:'Sora',sans-serif;font-size:15px;font-weight:600;color:var(--navy);}
+  .refresh-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;}
+  .refresh-btn:active{transform:rotate(180deg);transition:transform 0.3s;}
+
+  .stage-color-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;}
+
+  .amount-input{font-family:'IBM Plex Mono',monospace;}
+  .vachana-watermark{
+    text-align:center;
+    font-size:9px;
+    color:var(--gold);
+    opacity:0.4;
+    margin-top:12px;
+    font-weight:600;
+    letter-spacing:2px;
+  }
+
+  @media(max-width:380px){
+    .stage-name{min-width:80px;font-size:11px;}
+    .stat-value{font-size:17px;}
+    .pipeline-stats-grid{gap:6px;}
+    .stat-card{padding:8px;}
+    .config-logo{width:100px;}
+  }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <script>
-// Simple localStorage wrapper (replaces the mobile storage)
+// Simple localStorage wrapper
 const storage = {
   get: (key) => {
     try {
@@ -133,7 +405,34 @@ const storage = {
   }
 };
 
-const STORAGE_KEY = 'meeting_tracker_config';
+// Client Meeting Pipeline Stages
+const PIPELINE_STAGES = [
+  'Lead In',
+  'Qualified Lead',
+  'Meeting Scheduled',
+  'First Meeting',
+  'Proposal Sent',
+  'Under Review',
+  'Negotiation',
+  'Decision Pending',
+  'Client Onboarded',
+  'Lost'
+];
+
+const STAGE_COLORS = {
+  'Lead In': '#6B7280',
+  'Qualified Lead': '#3B82F6',
+  'Meeting Scheduled': '#8B5CF6',
+  'First Meeting': '#EC4899',
+  'Proposal Sent': '#F59E0B',
+  'Under Review': '#F97316',
+  'Negotiation': '#EF4444',
+  'Decision Pending': '#8B5CF6',
+  'Client Onboarded': '#10B981',
+  'Lost': '#6B7280'
+};
+
+const STORAGE_KEY = 'vachana_meeting_config';
 let state = {
   scriptUrl: null,
   configuring: true,
@@ -149,6 +448,8 @@ let state = {
   gpsCapturing: false,
   toast: null,
   repName: '',
+  pipelineStats: null,
+  pipelineLoading: false
 };
 
 async function loadConfig(){
@@ -159,15 +460,15 @@ async function loadConfig(){
     }
   }catch(e){}
   try{
-    const rep = storage.get('rep_name');
+    const rep = storage.get('vachana_rep_name');
     if(rep) state.repName = rep;
   }catch(e){}
   state.configuring = !state.scriptUrl;
   render();
   if(state.scriptUrl) {
-    // Test the connection
     await testConnection();
     fetchMeetings();
+    fetchPipelineStats();
   }
 }
 
@@ -175,7 +476,7 @@ async function testConnection() {
   try {
     const data = await apiGet('test', {});
     if (data.success) {
-      showToast('Connected to sheet successfully!');
+      showToast('Connected to Vachana sheet successfully!');
     } else {
       showToast('Connected but got error: ' + (data.error || 'Unknown'));
     }
@@ -191,11 +492,12 @@ async function saveScriptUrl(url){
   render();
   await testConnection();
   fetchMeetings();
+  fetchPipelineStats();
 }
 
 async function saveRepName(name){
   state.repName = name;
-  storage.set('rep_name', name);
+  storage.set('vachana_rep_name', name);
 }
 
 function showToast(msg, ms){
@@ -252,6 +554,18 @@ async function fetchMeetings(){
   render();
 }
 
+async function fetchPipelineStats(){
+  state.pipelineLoading = true; render();
+  try{
+    const data = await apiGet('pipeline', {});
+    state.pipelineStats = data;
+  }catch(e){
+    console.error('Pipeline stats error:', e);
+  }
+  state.pipelineLoading = false;
+  render();
+}
+
 function openBooking(client){
   state.bookingClient = client;
   render();
@@ -264,6 +578,7 @@ async function submitBooking(form){
     mobile: state.bookingClient.mobile,
     email: state.bookingClient.email,
     company: state.bookingClient.company || '',
+    investmentAmount: form.amount || '',
     meetingDate: form.date,
     meetingTime: form.time,
     purpose: form.purpose,
@@ -277,8 +592,9 @@ async function submitBooking(form){
     if(res.success){
       state.bookingClient = null;
       state.query=''; state.searchResults=[];
-      showToast('Meeting booked!');
+      showToast('Meeting booked! 🎉');
       fetchMeetings();
+      fetchPipelineStats();
       state.tab='meetings';
     }else{
       showToast(res.error || 'Could not book meeting');
@@ -328,6 +644,7 @@ async function submitUpdate(form){
     meetingId: state.updatingMeeting.meetingID || state.updatingMeeting['meetingID'],
     status: form.status,
     notes: form.notes,
+    investmentAmount: form.amount,
     address: state.gps ? state.gps.address : '',
     latitude: state.gps ? state.gps.lat : '',
     longitude: state.gps ? state.gps.lng : '',
@@ -339,8 +656,9 @@ async function submitUpdate(form){
     if(res.success){
       state.updatingMeeting = null;
       state.gps = null;
-      showToast('Meeting updated');
+      showToast('Meeting updated ✅');
       fetchMeetings();
+      fetchPipelineStats();
     }else{
       showToast(res.error || 'Could not update meeting');
     }
@@ -350,28 +668,62 @@ async function submitUpdate(form){
   render();
 }
 
+async function updatePipelineStage(meetingId, newStage){
+  showToast('Updating stage...', 60000);
+  try{
+    const res = await apiPost({
+      action:'updateStage',
+      meetingId: meetingId,
+      pipelineStage: newStage,
+      updatedBy: state.repName || ''
+    });
+    if(res.success){
+      showToast(`Stage updated to: ${newStage} ✅`);
+      fetchMeetings();
+      fetchPipelineStats();
+    }else{
+      showToast(res.error || 'Could not update stage');
+    }
+  }catch(e){
+    showToast('Network error while updating stage');
+  }
+}
+
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function statusClass(s){
   s = (s||'scheduled').toLowerCase();
-  if(s.indexOf('complet')!==-1) return 'completed';
+  if(s.indexOf('complet')!==-1 || s === 'completed') return 'completed';
   if(s.indexOf('resched')!==-1) return 'rescheduled';
   if(s.indexOf('cancel')!==-1) return 'cancelled';
-  return 'scheduled';
+  if(s === 'lost') return 'lost';
+  if(s === 'new') return 'new';
+  return 'inprogress';
 }
 
 function renderConfig(){
   return `
-  <div class="topbar"><div class="brand"><div class="brand-mark">L</div><div class="brand-name">Lead Tracker</div></div></div>
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="brand-text">
+          <div class="brand-name">Client Meeting Tracker</div>
+          <div class="brand-sub">Vachana Investments Pvt Ltd</div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="config-wrap">
-    <div class="config-logo">L</div>
-    <div class="config-title">Connect your sheet</div>
-    <div class="config-sub">Paste the Apps Script web app URL from your Google Sheet.</div>
+    <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="config-logo" onerror="this.style.display='none'">
+    <div class="config-title">Client Meeting Tracker</div>
+    <div class="config-company">VACHANA INVESTMENTS PVT LTD</div>
+    <div class="config-sub" style="margin-top:12px;">Paste the Apps Script web app URL from your Google Sheet to connect.</div>
     <label>Web app URL</label>
     <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${state.scriptUrl || ''}">
     <label>Your name (for update history)</label>
     <input type="text" id="cfgName" placeholder="e.g. Rahul Sharma" value="${esc(state.repName)}">
-    <button class="btn btn-primary" onclick="handleSaveConfig()">Save and continue</button>
+    <button class="btn btn-gold" onclick="handleSaveConfig()">Connect to Vachana</button>
   </div>`;
 }
 
@@ -387,7 +739,13 @@ function renderTopbar(title){
   return `
   <div class="topbar">
     <div class="topbar-row">
-      <div class="brand"><div class="brand-mark">L</div><div class="brand-name">${title}</div></div>
+      <div class="brand">
+        <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="brand-text">
+          <div class="brand-name">${title}</div>
+          <div class="brand-sub">Vachana Investments</div>
+        </div>
+      </div>
       <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">⚙️</button>
     </div>
   </div>`;
@@ -403,7 +761,7 @@ function renderSearchTab(){
   if(state.searching){
     resultsHtml = `<div class="empty">Searching...</div>`;
   } else if(state.query.trim() && state.searchResults.length===0){
-    resultsHtml = `<div class="empty">No leads match "${esc(state.query)}"</div>`;
+    resultsHtml = `<div class="empty">No clients match "${esc(state.query)}"</div>`;
   } else if(state.searchResults.length){
     resultsHtml = state.searchResults.map((c,i)=>{
       return `
@@ -411,23 +769,91 @@ function renderSearchTab(){
         <div class="client-row">
           <div>
             <div class="client-name">${esc(c.name)}</div>
-            <div class="client-sub">${esc(c.mobile)}${c.email? ' &middot; '+esc(c.email):''}${c.company? ' &middot; '+esc(c.company):''}</div>
+            <div class="client-sub">📱 ${esc(c.mobile)}${c.email? ' &middot; ✉️ '+esc(c.email):''}${c.company? ' &middot; 🏢 '+esc(c.company):''}</div>
           </div>
         </div>
       </div>`;
     }).join('');
   } else {
-    resultsHtml = `<div class="empty">🔍 Search by name, mobile number, or email to book a meeting.</div>`;
+    resultsHtml = `<div class="empty">🔍 Search by name, mobile number, or email to schedule a client meeting.</div>`;
   }
   return `
-  ${renderTopbar('Search & book')}
+  ${renderTopbar('Schedule Meeting')}
   <div class="content">
     <div class="search-box">
       <span>🔍</span>
-      <input type="text" placeholder="Search leads..." value="${esc(state.query)}" oninput="onSearchInput(this.value)">
+      <input type="text" placeholder="Search clients..." value="${esc(state.query)}" oninput="onSearchInput(this.value)">
     </div>
     ${resultsHtml}
   </div>`;
+}
+
+function renderPipelineDashboard() {
+  const stats = state.pipelineStats;
+  if (!stats || state.pipelineLoading) {
+    return `
+    <div class="pipeline-container">
+      <div class="empty" style="padding:20px;">
+        <div class="spinner"></div>
+        <div style="margin-top:8px;font-size:13px;">Loading pipeline...</div>
+      </div>
+    </div>`;
+  }
+  
+  const total = stats.total || 0;
+  const winRate = stats.winRate || '0%';
+  const totalAmount = stats.totalInvestmentAmount || 0;
+  
+  return `
+    <div class="pipeline-container">
+      <div class="pipeline-header">
+        <h3>📊 Client Pipeline</h3>
+        <button class="refresh-btn" onclick="fetchPipelineStats()" title="Refresh">🔄</button>
+      </div>
+      <div class="pipeline-stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">${total}</div>
+          <div class="stat-label">Total Clients</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-value">${winRate}</div>
+          <div class="stat-label">Conversion Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">₹${totalAmount.toLocaleString()}</div>
+          <div class="stat-label">Pipeline Value</div>
+        </div>
+      </div>
+      <div class="pipeline-stages">
+        ${PIPELINE_STAGES.map(stage => {
+          const count = stats.stats?.[stage] || 0;
+          const percentage = stats.conversionRates?.[stage] || '0%';
+          const barWidth = total > 0 ? ((count / total) * 100) : 0;
+          const color = STAGE_COLORS[stage] || '#6B7280';
+          return `
+            <div class="stage-item">
+              <div class="stage-name">
+                <span class="stage-color-dot" style="background:${color}"></span>
+                ${stage}
+              </div>
+              <div class="stage-bar">
+                <div class="stage-fill" style="width: ${barWidth}%; background: ${color}"></div>
+              </div>
+              <div class="stage-count">${count} (${percentage})</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      ${stats.won || stats.lost ? `
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-around;font-size:12px;color:var(--muted);">
+          <span>✅ Onboarded: ${stats.won || 0}</span>
+          <span>❌ Lost: ${stats.lost || 0}</span>
+          <span>💰 Closed: ₹${(stats.closedInvestmentAmount || 0).toLocaleString()}</span>
+        </div>
+      ` : ''}
+      <div class="vachana-watermark">VACHANA INVESTMENTS</div>
+    </div>
+  `;
 }
 
 function renderMeetingsTab(){
@@ -435,10 +861,12 @@ function renderMeetingsTab(){
   if(state.meetingsLoading){
     body = `<div class="empty">Loading meetings...</div>`;
   } else if(!state.meetings.length){
-    body = `<div class="empty">📅 No meetings yet. Book one from Search.</div>`;
+    body = `<div class="empty">📅 No meetings yet. Schedule one from Search.</div>`;
   } else {
     body = state.meetings.map((m,i)=>{
-      const stage = m.pipelinestage || 'New Lead';
+      const stage = m.pipelinestage || 'Lead In';
+      const stageColor = STAGE_COLORS[stage] || '#6B7280';
+      const status = m.status || 'Scheduled';
       return `
       <div class="card" onclick="handleOpenUpdate(${i})">
         <div class="meeting-row">
@@ -446,18 +874,24 @@ function renderMeetingsTab(){
             <div class="meeting-name">${esc(m.leadName)}</div>
             <div class="meeting-meta">
               <span>📅 ${esc(m.meetingDate)} ${esc(m.meetingTime)}</span>
-              ${m.address? ' &middot; 📍 '+esc(m.address) : ''}
-              <span class="stage-badge">${esc(stage)}</span>
+              ${m.investmentAmount ? `&middot; 💰 ₹${esc(m.investmentAmount)}` : ''}
+              <span class="stage-badge" style="background:${stageColor}20;color:${stageColor}">
+                <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${stageColor};margin-right:4px;"></span>
+                ${esc(stage)}
+              </span>
             </div>
           </div>
-          <span class="badge ${statusClass(m.status)}">${esc(m.status||'Scheduled')}</span>
+          <span class="badge ${statusClass(status)}">${esc(status)}</span>
         </div>
       </div>`;
     }).join('');
   }
+  
   return `
-  ${renderTopbar('My meetings')}
+  ${renderTopbar('Client Meetings')}
   <div class="content">
+    ${renderPipelineDashboard()}
+    <div style="margin:16px 0 8px;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">📋 Recent Meetings</div>
     ${body}
   </div>`;
 }
@@ -466,17 +900,20 @@ function renderBottomNav(){
   return `
   <div class="bottomnav">
     <button class="navbtn ${state.tab==='search'?'active':''}" onclick="handleTab('search')">
-      <span class="dot">🔍</span> Search &amp; book
+      <span class="dot">🔍</span> Schedule
     </button>
     <button class="navbtn ${state.tab==='meetings'?'active':''}" onclick="handleTab('meetings')">
-      <span class="dot">📅</span> My meetings
+      <span class="dot">📊</span> Pipeline
     </button>
   </div>`;
 }
 
 window.handleTab = function(t){
   state.tab = t;
-  if(t==='meetings') fetchMeetings();
+  if(t==='meetings') {
+    fetchMeetings();
+    fetchPipelineStats();
+  }
   render();
 };
 
@@ -487,45 +924,148 @@ window.handleOpenBooking = function(i){
 window.handleOpenUpdate = function(i){
   openUpdate(state.meetings[i]);
 };
-// Add this function to render a pipeline dashboard view
-function renderPipelineDashboard() {
-  return `
-    <div class="pipeline-container">
-      <div class="pipeline-stats-grid">
-        <div class="stat-card">
-          <div class="stat-value">${state.pipelineStats?.total || 0}</div>
-          <div class="stat-label">Total Leads</div>
-        </div>
-        <div class="stat-card success">
-          <div class="stat-value">${state.pipelineStats?.winRate || '0%'}</div>
-          <div class="stat-label">Win Rate</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">₹${(state.pipelineStats?.totalInvestmentAmount || 0).toLocaleString()}</div>
-          <div class="stat-label">Pipeline Value</div>
-        </div>
-      </div>
-      <div class="pipeline-stages">
-        ${PIPELINE_STAGES.map(stage => {
-          const count = state.pipelineStats?.stats?.[stage] || 0;
-          const percentage = state.pipelineStats?.conversionRates?.[stage] || '0%';
-          return `
-            <div class="stage-item">
-              <div class="stage-name">${stage}</div>
-              <div class="stage-bar">
-                <div class="stage-fill" style="width: ${(count / state.pipelineStats?.total) * 100}%; background: ${STAGE_COLORS[stage] || '#6B7280'}"></div>
-              </div>
-              <div class="stage-count">${count} (${percentage})</div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    </div>
-  `;
-}
+
 function renderBookingSheet(){
   if(!state.bookingClient) return '';
   const c = state.bookingClient;
   const today = new Date().toISOString().slice(0,10);
   return `
-  <div
+  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'booking')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">📅 Schedule Client Meeting</div>
+      <div class="sheet-sub">${esc(c.name)} &middot; 📱 ${esc(c.mobile)}</div>
+      <label>Date</label>
+      <input type="date" id="bkDate" min="${today}" value="${today}">
+      <label>Time</label>
+      <input type="time" id="bkTime" value="10:00">
+      <label>Investment Amount (₹)</label>
+      <input type="number" id="bkAmount" class="amount-input" placeholder="e.g. 5000000">
+      <label>Meeting Purpose</label>
+      <select id="bkPurpose">
+        <option>Initial Client Consultation</option>
+        <option>Portfolio Review</option>
+        <option>Investment Proposal Presentation</option>
+        <option>Document Collection</option>
+        <option>KYC Verification</option>
+        <option>Follow-up Meeting</option>
+        <option>Client Onboarding</option>
+        <option>Other</option>
+      </select>
+      <label>Notes (optional)</label>
+      <textarea id="bkNotes" placeholder="Any important details about this client..."></textarea>
+      <button class="btn btn-gold" onclick="handleSubmitBooking()">📌 Confirm Booking</button>
+      <button class="btn btn-outline" onclick="handleCloseSheet('booking')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+window.handleSubmitBooking = function(){
+  const form = {
+    date: document.getElementById('bkDate').value,
+    time: document.getElementById('bkTime').value,
+    amount: document.getElementById('bkAmount').value,
+    purpose: document.getElementById('bkPurpose').value,
+    notes: document.getElementById('bkNotes').value,
+  };
+  if(!form.date || !form.time){ showToast('Pick a date and time'); return; }
+  submitBooking(form);
+};
+
+window.handleCloseSheet = function(which){
+  if(which==='booking') state.bookingClient = null;
+  if(which==='update'){ state.updatingMeeting = null; state.gps = null; }
+  render();
+};
+
+window.handleCloseSheetBg = function(e, which){
+  if(e.target.classList.contains('sheet-overlay')) handleCloseSheet(which);
+};
+
+function renderUpdateSheet(){
+  if(!state.updatingMeeting) return '';
+  const m = state.updatingMeeting;
+  const statuses = ['Scheduled','Completed','Rescheduled','Cancelled','Lost'];
+  let gpsHtml;
+  if(state.gpsCapturing){
+    gpsHtml = `<div class="gps-box"><div class="pin pulse">📍</div><div>Getting your location...</div></div>`;
+  } else if(state.gps){
+    gpsHtml = `<div class="gps-box captured">
+      <div class="pin">📍</div>
+      <div>Location captured</div>
+      <div class="gps-coords">${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)}</div>
+      <div class="gps-addr">${esc(state.gps.address)}</div>
+    </div>`;
+  } else {
+    gpsHtml = `<div class="gps-box">
+      <div class="pin">📍</div>
+      <div style="margin-bottom:8px;">No location captured yet</div>
+      <button class="btn btn-outline" style="margin-top:0;" onclick="captureLocation()">Capture my location</button>
+    </div>`;
+  }
+  
+  const stageOptions = PIPELINE_STAGES.map(stage => {
+    const currentStage = m.pipelinestage || 'Lead In';
+    return `<option value="${stage}" ${stage === currentStage ? 'selected' : ''}>${stage}</option>`;
+  }).join('');
+  
+  return `
+  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'update')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">📝 Update Meeting</div>
+      <div class="sheet-sub">${esc(m.leadName)} &middot; 📅 ${esc(m.meetingDate)} ${esc(m.meetingTime)}</div>
+      <label>Pipeline Stage</label>
+      <select id="upStage">
+        ${stageOptions}
+      </select>
+      <label>Status</label>
+      <select id="upStatus">
+        ${statuses.map(s=>`<option ${((m.status||'Scheduled')===s)?'selected':''}>${s}</option>`).join('')}
+      </select>
+      <label>Investment Amount (₹)</label>
+      <input type="number" id="upAmount" class="amount-input" value="${esc(m.investmentAmount || '')}" placeholder="Update investment amount">
+      <label>Notes</label>
+      <textarea id="upNotes" placeholder="Meeting outcome, next steps...">${esc(m.notes||'')}</textarea>
+      ${gpsHtml}
+      <button class="btn btn-primary" onclick="handleSubmitUpdate()">💾 Save Update</button>
+      <button class="btn btn-outline" onclick="handleCloseSheet('update')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+window.handleSubmitUpdate = function(){
+  const form = {
+    status: document.getElementById('upStatus').value,
+    notes: document.getElementById('upNotes').value,
+    amount: document.getElementById('upAmount').value,
+  };
+  submitUpdate(form);
+};
+
+function renderToast(){
+  if(!state.toast) return '';
+  return `<div class="toast">${esc(state.toast)}</div>`;
+}
+
+function render(){
+  const app = document.getElementById('app');
+  if(state.configuring){
+    app.innerHTML = renderConfig();
+    return;
+  }
+  let body = state.tab==='search' ? renderSearchTab() : renderMeetingsTab();
+  app.innerHTML = `
+    ${body}
+    ${renderBottomNav()}
+    ${renderBookingSheet()}
+    ${renderUpdateSheet()}
+    ${renderToast()}
+  `;
+}
+
+// Initialize the app
+loadConfig();
+</script>
+</body>
+</html>
