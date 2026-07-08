@@ -31,22 +31,43 @@
     --shadow:0 2px 8px rgba(0,0,0,0.06);
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);}
-  #app{max-width:440px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative;}
+  body{
+    margin:0;
+    background:var(--bg);
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    cursor:default;
+  }
+  input, select, textarea, button{
+    cursor:pointer;
+  }
+  input:focus, select:focus, textarea:focus{
+    cursor:text;
+  }
+  #app{
+    max-width:440px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--bg);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
 
   .topbar{
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
-    color:#fff;
-    padding:14px 18px 12px;
+    background: var(--surface);
+    color:var(--text);
+    padding:12px 18px 12px;
     position:sticky;
     top:0;
     z-index:10;
     border-bottom: 2px solid var(--gold);
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
   }
   .topbar-row{display:flex;align-items:center;justify-content:space-between;}
   .brand{display:flex;align-items:center;gap:12px;}
   .brand-logo{
-    height:40px;
+    height:36px;
     width:auto;
     object-fit:contain;
   }
@@ -54,21 +75,22 @@
   .brand-name{
     font-family:'Sora',sans-serif;
     font-weight:600;
-    font-size:16px;
+    font-size:15px;
     letter-spacing:0.3px;
-    color:#fff;
+    color:var(--navy);
   }
   .brand-sub{
-    font-size:9px;
-    opacity:0.7;
-    font-weight:400;
+    font-size:8px;
+    opacity:0.6;
+    font-weight:500;
     letter-spacing:0.8px;
     text-transform:uppercase;
+    color:var(--navy);
   }
   .icon-btn{
-    background:rgba(255,255,255,0.1);
-    border:1px solid rgba(255,255,255,0.15);
-    color:#fff;
+    background:rgba(10,22,40,0.05);
+    border:1px solid rgba(10,22,40,0.1);
+    color:var(--navy);
     width:34px;
     height:34px;
     border-radius:9px;
@@ -79,7 +101,7 @@
     font-size:16px;
     transition:all 0.2s;
   }
-  .icon-btn:active{background:rgba(255,255,255,0.2);}
+  .icon-btn:active{background:rgba(10,22,40,0.1);}
 
   .content{flex:1;padding:16px 16px 90px;}
 
@@ -103,6 +125,7 @@
     font-family:'Inter',sans-serif;
     background:transparent;
     color:var(--text);
+    cursor:text;
   }
   .search-box input::placeholder{color:var(--muted);}
 
@@ -244,6 +267,7 @@
     background:#fff;
     outline:none;
     transition:border-color 0.2s;
+    cursor:text;
   }
   input:focus,select:focus,textarea:focus{border-color:var(--gold);}
   textarea{resize:vertical;min-height:60px;}
@@ -272,6 +296,8 @@
   .btn-outline:active{background:var(--bg);}
   .btn-success{background:var(--success);color:#fff;}
   .btn-success:active{background:#168a54;}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-danger:active{background:#a93226;}
   .btn:disabled{opacity:0.5;cursor:not-allowed;}
 
   .gps-box{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:14px;text-align:center;}
@@ -301,38 +327,55 @@
     border-left: 3px solid var(--gold);
   }
 
-  .config-wrap{padding:40px 22px;}
-  .config-logo{
-    width:120px;
+  .login-wrap{
+    padding:40px 22px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:80vh;
+  }
+  .login-logo{
+    width:140px;
     height:auto;
-    margin:0 auto 18px;
+    margin:0 auto 24px;
     display:block;
     border-radius:12px;
-    box-shadow:0 4px 20px rgba(201,168,76,0.2);
     background:var(--surface);
-    padding:16px;
+    padding:20px;
+    box-shadow:0 4px 20px rgba(201,168,76,0.15);
   }
-  .config-title{
+  .login-title{
     font-family:'Sora',sans-serif;
     font-weight:700;
-    font-size:22px;
+    font-size:24px;
     text-align:center;
     color:var(--navy);
   }
-  .config-sub{
-    font-size:13px;
+  .login-sub{
+    font-size:14px;
     color:var(--muted);
     text-align:center;
-    margin-top:6px;
-    line-height:1.5;
+    margin-top:8px;
+    line-height:1.6;
   }
-  .config-company{
+  .login-company{
     text-align:center;
     font-size:11px;
     color:var(--gold-dark);
     font-weight:600;
     margin-top:4px;
     letter-spacing:1px;
+  }
+  .login-email{
+    font-size:13px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:12px;
+    padding:10px;
+    background:var(--bg);
+    border-radius:8px;
+    width:100%;
   }
   .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
   @keyframes spin{to{transform:rotate(360deg);}}
@@ -376,36 +419,54 @@
     font-weight:600;
     letter-spacing:2px;
   }
+  .user-info{
+    font-size:11px;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .user-avatar{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:var(--gold-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--navy);
+    font-weight:600;
+    font-size:12px;
+  }
+
+  .clickable, .clickable *, [onclick], [onclick] * {
+    cursor:pointer !important;
+  }
 
   @media(max-width:380px){
     .stage-name{min-width:80px;font-size:11px;}
     .stat-value{font-size:17px;}
     .pipeline-stats-grid{gap:6px;}
     .stat-card{padding:8px;}
-    .config-logo{width:100px;}
+    .login-logo{width:100px;}
   }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
-<script>
-// Simple localStorage wrapper
-const storage = {
-  get: (key) => {
-    try {
-      const value = localStorage.getItem(key);
-      return value ? JSON.parse(value) : null;
-    } catch { return null; }
-  },
-  set: (key, value) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch(e) {}
-  }
-};
+<!-- Google OAuth Client Library -->
+<script src="https://apis.google.com/js/api.js"></script>
 
-// Client Meeting Pipeline Stages
+<script>
+// Google Sheets API Configuration - YOUR CREDENTIALS FILLED IN
+const CLIENT_ID = '1030005146870-7ta2nhd4kc7fopm7qdbi4qgld4q31uos.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyDh6wOVcdFwHiZbawa2g7U-qtu72ExJzDA';
+const SPREADSHEET_ID = '1ZsJNHfdbCbnMVhi4MKC2sCe_4Vof6rnGApVlOYbIwlg';
+const DISCOVERY_DOCS = ['https://sheets.googleapis.com/$discovery/rest?version=v4'];
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+
+// Pipeline Stages
 const PIPELINE_STAGES = [
   'Lead In',
   'Qualified Lead',
@@ -432,10 +493,26 @@ const STAGE_COLORS = {
   'Lost': '#6B7280'
 };
 
-const STORAGE_KEY = 'vachana_meeting_config';
+// Sheet column mappings
+const LEAD_COLUMNS = {
+  name: 0,
+  mobile: 1,
+  email: 2,
+  company: 3
+};
+
+const MEETING_HEADERS = [
+  'Meeting ID', 'Lead Name', 'Mobile No', 'Email Id', 'Company', 'Investment Amount',
+  'Meeting Date', 'Meeting Time', 'Purpose', 'Status',
+  'Pipeline Stage', 'Stage Updated Date',
+  'Address', 'Latitude', 'Longitude',
+  'Notes', 'Created At', 'Last Updated At', 'Updated By'
+];
+
 let state = {
-  scriptUrl: null,
-  configuring: true,
+  isSignedIn: false,
+  userEmail: '',
+  userName: '',
   tab: 'search',
   query: '',
   searchResults: [],
@@ -449,244 +526,361 @@ let state = {
   toast: null,
   repName: '',
   pipelineStats: null,
-  pipelineLoading: false
+  pipelineLoading: false,
+  gapiInitialized: false,
+  authInitialized: false
 };
 
-async function loadConfig(){
-  try{
-    const cfg = storage.get(STORAGE_KEY);
-    if(cfg && cfg.scriptUrl){
-      state.scriptUrl = cfg.scriptUrl;
-    }
-  }catch(e){}
-  try{
-    const rep = storage.get('vachana_rep_name');
-    if(rep) state.repName = rep;
-  }catch(e){}
-  state.configuring = !state.scriptUrl;
-  render();
-  if(state.scriptUrl) {
-    await testConnection();
-    fetchMeetings();
-    fetchPipelineStats();
+// Google OAuth Functions
+function initGoogleAPI() {
+  if (state.gapiInitialized) return;
+  
+  gapi.load('client:auth2', function() {
+    gapi.client.init({
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES
+    }).then(function() {
+      state.gapiInitialized = true;
+      // Listen for sign-in state changes
+      gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+      
+      // Handle initial sign-in state
+      updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    }).catch(function(error) {
+      console.error('Error initializing Google API:', error);
+      showToast('Error initializing Google API: ' + error.message);
+    });
+  });
+}
+
+function updateSigninStatus(isSignedIn) {
+  state.isSignedIn = isSignedIn;
+  state.authInitialized = true;
+  if (isSignedIn) {
+    const user = gapi.auth2.getAuthInstance().currentUser.get();
+    const profile = user.getBasicProfile();
+    state.userEmail = profile.getEmail();
+    state.userName = profile.getName();
+    state.repName = state.userName;
+    render();
+    loadData();
+  } else {
+    state.userEmail = '';
+    state.userName = '';
+    render();
   }
 }
 
-async function testConnection() {
+function signIn() {
+  if (!state.gapiInitialized) {
+    showToast('Loading Google API... Please wait.');
+    initGoogleAPI();
+    setTimeout(signIn, 1000);
+    return;
+  }
+  gapi.auth2.getAuthInstance().signIn();
+}
+
+function signOut() {
+  if (state.gapiInitialized) {
+    gapi.auth2.getAuthInstance().signOut();
+  }
+  state.isSignedIn = false;
+  state.userEmail = '';
+  state.userName = '';
+  render();
+}
+
+// Google Sheets API Functions
+async function getSheetData(sheetName, range = '') {
   try {
-    const data = await apiGet('test', {});
-    if (data.success) {
-      showToast('Connected to Vachana sheet successfully!');
-    } else {
-      showToast('Connected but got error: ' + (data.error || 'Unknown'));
-    }
-  } catch(e) {
-    showToast('Could not connect. Check URL and permissions.');
+    const response = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: sheetName + (range ? '!' + range : '')
+    });
+    return response.result.values || [];
+  } catch (error) {
+    console.error('Error fetching sheet data:', error);
+    showToast('Error accessing sheet: ' + error.message);
+    return [];
   }
 }
 
-async function saveScriptUrl(url){
-  storage.set(STORAGE_KEY, {scriptUrl: url});
-  state.scriptUrl = url;
-  state.configuring = false;
-  render();
-  await testConnection();
-  fetchMeetings();
-  fetchPipelineStats();
+async function appendToSheet(sheetName, values) {
+  try {
+    const response = await gapi.client.sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: sheetName,
+      valueInputOption: 'USER_ENTERED',
+      insertDataOption: 'INSERT_ROWS',
+      resource: {
+        values: [values]
+      }
+    });
+    return response.result;
+  } catch (error) {
+    console.error('Error appending to sheet:', error);
+    showToast('Error saving data: ' + error.message);
+    throw error;
+  }
 }
 
-async function saveRepName(name){
-  state.repName = name;
-  storage.set('vachana_rep_name', name);
+async function updateSheet(sheetName, range, values) {
+  try {
+    const response = await gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: sheetName + '!' + range,
+      valueInputOption: 'USER_ENTERED',
+      resource: {
+        values: [values]
+      }
+    });
+    return response.result;
+  } catch (error) {
+    console.error('Error updating sheet:', error);
+    showToast('Error updating data: ' + error.message);
+    throw error;
+  }
 }
 
+async function getMeetingsSheet() {
+  const meetingsSheetName = 'Meetings';
+  
+  // Check if Meetings sheet exists
+  try {
+    const response = await gapi.client.sheets.spreadsheets.get({
+      spreadsheetId: SPREADSHEET_ID
+    });
+    const sheets = response.result.sheets;
+    const hasMeetingsSheet = sheets.some(s => s.properties.title === meetingsSheetName);
+    
+    if (!hasMeetingsSheet) {
+      // Create Meetings sheet with headers
+      await gapi.client.sheets.spreadsheets.batchUpdate({
+        spreadsheetId: SPREADSHEET_ID,
+        resource: {
+          requests: [{
+            addSheet: {
+              properties: {
+                title: meetingsSheetName
+              }
+            }
+          }]
+        }
+      });
+      
+      // Add headers
+      await appendToSheet(meetingsSheetName, MEETING_HEADERS);
+      showToast('Meetings sheet created!');
+    }
+  } catch (error) {
+    console.error('Error creating Meetings sheet:', error);
+    showToast('Error: ' + error.message);
+  }
+  
+  return meetingsSheetName;
+}
+
+// Data functions
+async function searchLeads(query) {
+  const values = await getSheetData('LEADS');
+  if (!values || values.length < 2) return [];
+  
+  const q = query.trim().toLowerCase();
+  const results = [];
+  
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const name = String(row[LEAD_COLUMNS.name] || '');
+    const mobile = String(row[LEAD_COLUMNS.mobile] || '');
+    const email = String(row[LEAD_COLUMNS.email] || '');
+    const company = String(row[LEAD_COLUMNS.company] || '');
+    
+    const haystack = (name + ' ' + mobile + ' ' + email + ' ' + company).toLowerCase();
+    if (!q || haystack.indexOf(q) !== -1) {
+      results.push({
+        name: name,
+        mobile: mobile,
+        email: email,
+        company: company,
+      });
+    }
+    if (results.length >= 25) break;
+  }
+  return results;
+}
+
+async function listMeetings() {
+  const meetingsSheet = await getMeetingsSheet();
+  const values = await getSheetData(meetingsSheet);
+  if (!values || values.length < 2) return [];
+  
+  const headers = values[0];
+  const meetings = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    if (!row[0]) continue;
+    const obj = {};
+    headers.forEach((h, j) => obj[headerKey(h)] = row[j] || '');
+    meetings.push(obj);
+  }
+  return meetings.reverse();
+}
+
+function headerKey(h) {
+  return String(h).replace(/\s+/g, '').replace(/^./, c => c.toLowerCase());
+}
+
+async function bookMeeting(data) {
+  const meetingsSheet = await getMeetingsSheet();
+  const id = 'MTG-' + new Date().toISOString().slice(2,10).replace(/-/g,'') + 
+             new Date().toTimeString().slice(0,8).replace(/:/g,'');
+  const now = new Date().toISOString();
+  const initialStage = data.pipelineStage || 'Lead In';
+  
+  const row = [
+    id,
+    data.leadName || '',
+    data.mobile || '',
+    data.email || '',
+    data.company || '',
+    data.investmentAmount || '',
+    data.meetingDate || '',
+    data.meetingTime || '',
+    data.purpose || '',
+    'Scheduled',
+    initialStage,
+    now,
+    data.address || '',
+    data.latitude || '',
+    data.longitude || '',
+    data.notes || '',
+    now,
+    now,
+    data.updatedBy || ''
+  ];
+  
+  await appendToSheet(meetingsSheet, row);
+  return { success: true, meetingId: id };
+}
+
+async function updateMeeting(data) {
+  const meetingsSheet = await getMeetingsSheet();
+  const values = await getSheetData(meetingsSheet);
+  if (!values || values.length < 2) return { error: 'No meetings found' };
+  
+  const headers = values[0];
+  const idCol = 0;
+  let rowIndex = -1;
+  
+  for (let i = 1; i < values.length; i++) {
+    if (values[i][idCol] === data.meetingId) {
+      rowIndex = i;
+      break;
+    }
+  }
+  
+  if (rowIndex === -1) return { error: 'Meeting ID not found' };
+  
+  const row = values[rowIndex];
+  const rowNum = rowIndex + 1;
+  const updateMap = {
+    'Status': data.status,
+    'Pipeline Stage': data.pipelineStage,
+    'Investment Amount': data.investmentAmount,
+    'Address': data.address,
+    'Latitude': data.latitude,
+    'Longitude': data.longitude,
+    'Notes': data.notes,
+    'Last Updated At': new Date().toISOString(),
+    'Updated By': data.updatedBy,
+  };
+  
+  const updatedRow = [...row];
+  headers.forEach((h, j) => {
+    if (updateMap[h] !== undefined && updateMap[h] !== null && updateMap[h] !== '') {
+      updatedRow[j] = updateMap[h];
+    }
+  });
+  
+  const range = `A${rowNum}:${String.fromCharCode(65 + updatedRow.length - 1)}${rowNum}`;
+  await updateSheet(meetingsSheet, range, updatedRow);
+  return { success: true };
+}
+
+async function getPipelineStats() {
+  const meetings = await listMeetings();
+  if (!meetings || meetings.length === 0) {
+    return {
+      stats: {},
+      total: 0,
+      conversionRates: {},
+      stages: PIPELINE_STAGES,
+      winRate: '0%',
+      won: 0,
+      lost: 0,
+      totalInvestmentAmount: 0,
+      closedInvestmentAmount: 0
+    };
+  }
+  
+  const stats = {};
+  PIPELINE_STAGES.forEach(stage => stats[stage] = 0);
+  let totalAmount = 0;
+  let closedAmount = 0;
+  
+  meetings.forEach(m => {
+    const stage = m.pipelinestage || 'Lead In';
+    if (stats[stage] !== undefined) stats[stage]++;
+    const amount = parseFloat(m.investmentAmount) || 0;
+    totalAmount += amount;
+    if (stage === 'Client Onboarded') closedAmount += amount;
+  });
+  
+  const total = meetings.length;
+  const conversionRates = {};
+  for (const [stage, count] of Object.entries(stats)) {
+    conversionRates[stage] = total > 0 ? ((count / total) * 100).toFixed(1) + '%' : '0%';
+  }
+  
+  const won = stats['Client Onboarded'] || 0;
+  const lost = stats['Lost'] || 0;
+  const totalClosed = won + lost;
+  const winRate = totalClosed > 0 ? ((won / totalClosed) * 100).toFixed(1) + '%' : '0%';
+  
+  return {
+    stats: stats,
+    total: total,
+    conversionRates: conversionRates,
+    stages: PIPELINE_STAGES,
+    winRate: winRate,
+    won: won,
+    lost: lost,
+    totalInvestmentAmount: totalAmount,
+    closedInvestmentAmount: closedAmount
+  };
+}
+
+async function loadData() {
+  if (!state.isSignedIn) return;
+  
+  try {
+    await getMeetingsSheet();
+    await fetchMeetings();
+    await fetchPipelineStats();
+  } catch (error) {
+    console.error('Error loading data:', error);
+    showToast('Error loading data. Please check permissions.');
+  }
+}
+
+// UI Functions
 function showToast(msg, ms){
   state.toast = msg;
   render();
   setTimeout(()=>{ state.toast=null; render(); }, ms||2200);
-}
-
-async function apiGet(action, params){
-  const url = new URL(state.scriptUrl);
-  url.searchParams.set('action', action);
-  Object.keys(params||{}).forEach(k=>url.searchParams.set(k, params[k]));
-  const res = await fetch(url.toString());
-  return res.json();
-}
-
-async function apiPost(payload){
-  const res = await fetch(state.scriptUrl, {
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify(payload)
-  });
-  return res.json();
-}
-
-let searchDebounce;
-function onSearchInput(val){
-  state.query = val;
-  render();
-  clearTimeout(searchDebounce);
-  if(!val.trim()){ state.searchResults=[]; render(); return; }
-  searchDebounce = setTimeout(async ()=>{
-    state.searching = true; render();
-    try{
-      const data = await apiGet('search', {q: val});
-      state.searchResults = data.results || [];
-    }catch(e){
-      showToast('Could not reach the sheet. Check settings.');
-    }
-    state.searching = false;
-    render();
-  }, 380);
-}
-
-async function fetchMeetings(){
-  state.meetingsLoading = true; render();
-  try{
-    const data = await apiGet('list', {});
-    state.meetings = data.meetings || [];
-  }catch(e){
-    showToast('Could not load meetings.');
-  }
-  state.meetingsLoading = false;
-  render();
-}
-
-async function fetchPipelineStats(){
-  state.pipelineLoading = true; render();
-  try{
-    const data = await apiGet('pipeline', {});
-    state.pipelineStats = data;
-  }catch(e){
-    console.error('Pipeline stats error:', e);
-  }
-  state.pipelineLoading = false;
-  render();
-}
-
-function openBooking(client){
-  state.bookingClient = client;
-  render();
-}
-
-async function submitBooking(form){
-  const payload = {
-    action:'book',
-    leadName: state.bookingClient.name,
-    mobile: state.bookingClient.mobile,
-    email: state.bookingClient.email,
-    company: state.bookingClient.company || '',
-    investmentAmount: form.amount || '',
-    meetingDate: form.date,
-    meetingTime: form.time,
-    purpose: form.purpose,
-    pipelineStage: 'Meeting Scheduled',
-    notes: form.notes,
-    updatedBy: state.repName || '',
-  };
-  showToast('Booking meeting...', 60000);
-  try{
-    const res = await apiPost(payload);
-    if(res.success){
-      state.bookingClient = null;
-      state.query=''; state.searchResults=[];
-      showToast('Meeting booked! 🎉');
-      fetchMeetings();
-      fetchPipelineStats();
-      state.tab='meetings';
-    }else{
-      showToast(res.error || 'Could not book meeting');
-    }
-  }catch(e){
-    showToast('Network error while booking');
-  }
-  render();
-}
-
-function openUpdate(meeting){
-  state.updatingMeeting = meeting;
-  state.gps = null;
-  render();
-}
-
-function captureLocation(){
-  if(!navigator.geolocation){
-    showToast('Location not supported on this device');
-    return;
-  }
-  state.gpsCapturing = true; render();
-  navigator.geolocation.getCurrentPosition(async (pos)=>{
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    state.gps = {lat, lng, address: 'Looking up address...'};
-    state.gpsCapturing = false;
-    render();
-    try{
-      const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
-      const j = await r.json();
-      const addr = [j.locality, j.city, j.principalSubdivision].filter(Boolean).join(', ');
-      state.gps.address = addr || 'Address unavailable';
-    }catch(e){
-      state.gps.address = 'Address lookup failed';
-    }
-    render();
-  }, (err)=>{
-    state.gpsCapturing = false;
-    showToast('Could not get location: ' + err.message);
-    render();
-  }, {enableHighAccuracy:true, timeout:12000});
-}
-
-async function submitUpdate(form){
-  const payload = {
-    action:'update',
-    meetingId: state.updatingMeeting.meetingID || state.updatingMeeting['meetingID'],
-    status: form.status,
-    notes: form.notes,
-    investmentAmount: form.amount,
-    address: state.gps ? state.gps.address : '',
-    latitude: state.gps ? state.gps.lat : '',
-    longitude: state.gps ? state.gps.lng : '',
-    updatedBy: state.repName || '',
-  };
-  showToast('Saving update...', 60000);
-  try{
-    const res = await apiPost(payload);
-    if(res.success){
-      state.updatingMeeting = null;
-      state.gps = null;
-      showToast('Meeting updated ✅');
-      fetchMeetings();
-      fetchPipelineStats();
-    }else{
-      showToast(res.error || 'Could not update meeting');
-    }
-  }catch(e){
-    showToast('Network error while updating');
-  }
-  render();
-}
-
-async function updatePipelineStage(meetingId, newStage){
-  showToast('Updating stage...', 60000);
-  try{
-    const res = await apiPost({
-      action:'updateStage',
-      meetingId: meetingId,
-      pipelineStage: newStage,
-      updatedBy: state.repName || ''
-    });
-    if(res.success){
-      showToast(`Stage updated to: ${newStage} ✅`);
-      fetchMeetings();
-      fetchPipelineStats();
-    }else{
-      showToast(res.error || 'Could not update stage');
-    }
-  }catch(e){
-    showToast('Network error while updating stage');
-  }
 }
 
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -701,60 +895,59 @@ function statusClass(s){
   return 'inprogress';
 }
 
-function renderConfig(){
+// Render Functions
+function renderLogin() {
   return `
-  <div class="topbar">
-    <div class="topbar-row">
-      <div class="brand">
-        <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="brand-text">
-          <div class="brand-name">Client Meeting Tracker</div>
-          <div class="brand-sub">Vachana Investments Pvt Ltd</div>
+    <div class="topbar">
+      <div class="topbar-row">
+        <div class="brand">
+          <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none'">
+          <div class="brand-text">
+            <div class="brand-name">Client Meeting Tracker</div>
+            <div class="brand-sub">Vachana Investments Pvt Ltd</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="config-wrap">
-    <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="config-logo" onerror="this.style.display='none'">
-    <div class="config-title">Client Meeting Tracker</div>
-    <div class="config-company">VACHANA INVESTMENTS PVT LTD</div>
-    <div class="config-sub" style="margin-top:12px;">Paste the Apps Script web app URL from your Google Sheet to connect.</div>
-    <label>Web app URL</label>
-    <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${state.scriptUrl || ''}">
-    <label>Your name (for update history)</label>
-    <input type="text" id="cfgName" placeholder="e.g. Rahul Sharma" value="${esc(state.repName)}">
-    <button class="btn btn-gold" onclick="handleSaveConfig()">Connect to Vachana</button>
-  </div>`;
+    <div class="login-wrap">
+      <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="login-logo" onerror="this.style.display='none'">
+      <div class="login-title">Welcome to Vachana</div>
+      <div class="login-company">Client Meeting Tracker</div>
+      <div class="login-sub">
+        Sign in with your Google account to access client meetings.<br>
+        <small style="color:var(--muted);font-size:12px;">
+          Only users with access to the Google Sheet can sign in.
+        </small>
+      </div>
+      <button class="btn btn-gold" onclick="signIn()" style="max-width:280px;margin-top:24px;">
+        🔑 Sign in with Google
+      </button>
+    </div>
+  `;
 }
-
-window.handleSaveConfig = async function(){
-  const url = document.getElementById('cfgUrl').value.trim();
-  const name = document.getElementById('cfgName').value.trim();
-  if(!url){ showToast('Paste the web app URL first'); return; }
-  await saveRepName(name);
-  await saveScriptUrl(url);
-};
 
 function renderTopbar(title){
   return `
   <div class="topbar">
     <div class="topbar-row">
       <div class="brand">
-        <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <img src="https://vachanainvestments.com/wp-content/uploads/2023/09/Logo_PNG-300x238.png" alt="Vachana Investments" class="brand-logo" onerror="this.style.display='none'">
         <div class="brand-text">
           <div class="brand-name">${title}</div>
           <div class="brand-sub">Vachana Investments</div>
         </div>
       </div>
-      <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">⚙️</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="user-info">
+          <span class="user-avatar">${state.userName ? state.userName.charAt(0).toUpperCase() : 'U'}</span>
+          <span style="font-size:10px;color:var(--muted);">${state.userEmail}</span>
+        </div>
+        <button class="icon-btn" onclick="signOut()" style="font-size:12px;" title="Sign Out">🚪</button>
+        <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">⚙️</button>
+      </div>
     </div>
   </div>`;
 }
-
-window.handleOpenSettings = function(){
-  state.configuring = true;
-  render();
-};
 
 function renderSearchTab(){
   let resultsHtml = '';
@@ -765,7 +958,7 @@ function renderSearchTab(){
   } else if(state.searchResults.length){
     resultsHtml = state.searchResults.map((c,i)=>{
       return `
-      <div class="card" onclick="handleOpenBooking(${i})">
+      <div class="card clickable" onclick="handleOpenBooking(${i})">
         <div class="client-row">
           <div>
             <div class="client-name">${esc(c.name)}</div>
@@ -868,7 +1061,7 @@ function renderMeetingsTab(){
       const stageColor = STAGE_COLORS[stage] || '#6B7280';
       const status = m.status || 'Scheduled';
       return `
-      <div class="card" onclick="handleOpenUpdate(${i})">
+      <div class="card clickable" onclick="handleOpenUpdate(${i})">
         <div class="meeting-row">
           <div class="meeting-main">
             <div class="meeting-name">${esc(m.leadName)}</div>
@@ -908,23 +1101,6 @@ function renderBottomNav(){
   </div>`;
 }
 
-window.handleTab = function(t){
-  state.tab = t;
-  if(t==='meetings') {
-    fetchMeetings();
-    fetchPipelineStats();
-  }
-  render();
-};
-
-window.handleOpenBooking = function(i){
-  openBooking(state.searchResults[i]);
-};
-
-window.handleOpenUpdate = function(i){
-  openUpdate(state.meetings[i]);
-};
-
 function renderBookingSheet(){
   if(!state.bookingClient) return '';
   const c = state.bookingClient;
@@ -959,28 +1135,6 @@ function renderBookingSheet(){
     </div>
   </div>`;
 }
-
-window.handleSubmitBooking = function(){
-  const form = {
-    date: document.getElementById('bkDate').value,
-    time: document.getElementById('bkTime').value,
-    amount: document.getElementById('bkAmount').value,
-    purpose: document.getElementById('bkPurpose').value,
-    notes: document.getElementById('bkNotes').value,
-  };
-  if(!form.date || !form.time){ showToast('Pick a date and time'); return; }
-  submitBooking(form);
-};
-
-window.handleCloseSheet = function(which){
-  if(which==='booking') state.bookingClient = null;
-  if(which==='update'){ state.updatingMeeting = null; state.gps = null; }
-  render();
-};
-
-window.handleCloseSheetBg = function(e, which){
-  if(e.target.classList.contains('sheet-overlay')) handleCloseSheet(which);
-};
 
 function renderUpdateSheet(){
   if(!state.updatingMeeting) return '';
@@ -1034,6 +1188,45 @@ function renderUpdateSheet(){
   </div>`;
 }
 
+function renderToast(){
+  if(!state.toast) return '';
+  return `<div class="toast">${esc(state.toast)}</div>`;
+}
+
+// Event Handlers
+window.handleOpenSettings = function(){
+  showToast('Signed in as: ' + state.userEmail + ' | Sheet: Vachana Meetings');
+};
+
+window.handleTab = function(t){
+  state.tab = t;
+  if(t==='meetings') {
+    fetchMeetings();
+    fetchPipelineStats();
+  }
+  render();
+};
+
+window.handleOpenBooking = function(i){
+  openBooking(state.searchResults[i]);
+};
+
+window.handleOpenUpdate = function(i){
+  openUpdate(state.meetings[i]);
+};
+
+window.handleSubmitBooking = function(){
+  const form = {
+    date: document.getElementById('bkDate').value,
+    time: document.getElementById('bkTime').value,
+    amount: document.getElementById('bkAmount').value,
+    purpose: document.getElementById('bkPurpose').value,
+    notes: document.getElementById('bkNotes').value,
+  };
+  if(!form.date || !form.time){ showToast('Pick a date and time'); return; }
+  submitBooking(form);
+};
+
 window.handleSubmitUpdate = function(){
   const form = {
     status: document.getElementById('upStatus').value,
@@ -1043,17 +1236,167 @@ window.handleSubmitUpdate = function(){
   submitUpdate(form);
 };
 
-function renderToast(){
-  if(!state.toast) return '';
-  return `<div class="toast">${esc(state.toast)}</div>`;
+window.handleCloseSheet = function(which){
+  if(which==='booking') state.bookingClient = null;
+  if(which==='update'){ state.updatingMeeting = null; state.gps = null; }
+  render();
+};
+
+window.handleCloseSheetBg = function(e, which){
+  if(e.target.classList.contains('sheet-overlay')) handleCloseSheet(which);
+};
+
+// Search and Data Functions
+let searchDebounce;
+function onSearchInput(val){
+  state.query = val;
+  render();
+  clearTimeout(searchDebounce);
+  if(!val.trim()){ state.searchResults=[]; render(); return; }
+  searchDebounce = setTimeout(async ()=>{
+    state.searching = true; render();
+    try{
+      state.searchResults = await searchLeads(val);
+    }catch(e){
+      showToast('Error searching: ' + e.message);
+    }
+    state.searching = false;
+    render();
+  }, 380);
+}
+
+async function fetchMeetings(){
+  state.meetingsLoading = true; render();
+  try{
+    state.meetings = await listMeetings();
+  }catch(e){
+    showToast('Could not load meetings: ' + e.message);
+  }
+  state.meetingsLoading = false;
+  render();
+}
+
+async function fetchPipelineStats(){
+  state.pipelineLoading = true; render();
+  try{
+    state.pipelineStats = await getPipelineStats();
+  }catch(e){
+    console.error('Pipeline stats error:', e);
+  }
+  state.pipelineLoading = false;
+  render();
+}
+
+function openBooking(client){
+  state.bookingClient = client;
+  render();
+}
+
+async function submitBooking(form){
+  const payload = {
+    leadName: state.bookingClient.name,
+    mobile: state.bookingClient.mobile,
+    email: state.bookingClient.email,
+    company: state.bookingClient.company || '',
+    investmentAmount: form.amount || '',
+    meetingDate: form.date,
+    meetingTime: form.time,
+    purpose: form.purpose,
+    pipelineStage: 'Meeting Scheduled',
+    notes: form.notes,
+    updatedBy: state.repName || state.userEmail || '',
+  };
+  showToast('Booking meeting...', 30000);
+  try{
+    const res = await bookMeeting(payload);
+    if(res.success){
+      state.bookingClient = null;
+      state.query=''; state.searchResults=[];
+      showToast('Meeting booked! 🎉');
+      fetchMeetings();
+      fetchPipelineStats();
+      state.tab='meetings';
+    }else{
+      showToast(res.error || 'Could not book meeting');
+    }
+  }catch(e){
+    showToast('Error: ' + e.message);
+  }
+  render();
+}
+
+function openUpdate(meeting){
+  state.updatingMeeting = meeting;
+  state.gps = null;
+  render();
+}
+
+function captureLocation(){
+  if(!navigator.geolocation){
+    showToast('Location not supported on this device');
+    return;
+  }
+  state.gpsCapturing = true; render();
+  navigator.geolocation.getCurrentPosition(async (pos)=>{
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    state.gps = {lat, lng, address: 'Looking up address...'};
+    state.gpsCapturing = false;
+    render();
+    try{
+      const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+      const j = await r.json();
+      const addr = [j.locality, j.city, j.principalSubdivision].filter(Boolean).join(', ');
+      state.gps.address = addr || 'Address unavailable';
+    }catch(e){
+      state.gps.address = 'Address lookup failed';
+    }
+    render();
+  }, (err)=>{
+    state.gpsCapturing = false;
+    showToast('Could not get location: ' + err.message);
+    render();
+  }, {enableHighAccuracy:true, timeout:12000});
+}
+
+async function submitUpdate(form){
+  const payload = {
+    meetingId: state.updatingMeeting.meetingID || state.updatingMeeting['meetingID'],
+    status: form.status,
+    notes: form.notes,
+    investmentAmount: form.amount,
+    address: state.gps ? state.gps.address : '',
+    latitude: state.gps ? state.gps.lat : '',
+    longitude: state.gps ? state.gps.lng : '',
+    updatedBy: state.repName || state.userEmail || '',
+  };
+  showToast('Saving update...', 30000);
+  try{
+    const res = await updateMeeting(payload);
+    if(res.success){
+      state.updatingMeeting = null;
+      state.gps = null;
+      showToast('Meeting updated ✅');
+      fetchMeetings();
+      fetchPipelineStats();
+    }else{
+      showToast(res.error || 'Could not update meeting');
+    }
+  }catch(e){
+    showToast('Error: ' + e.message);
+  }
+  render();
 }
 
 function render(){
   const app = document.getElementById('app');
-  if(state.configuring){
-    app.innerHTML = renderConfig();
+  
+  // Show login if not signed in
+  if (!state.isSignedIn) {
+    app.innerHTML = renderLogin();
     return;
   }
+  
+  // Show main app
   let body = state.tab==='search' ? renderSearchTab() : renderMeetingsTab();
   app.innerHTML = `
     ${body}
@@ -1065,7 +1408,18 @@ function render(){
 }
 
 // Initialize the app
-loadConfig();
+function init() {
+  // Load Google API
+  if (typeof gapi !== 'undefined') {
+    initGoogleAPI();
+  } else {
+    // If gapi not loaded, try again after a delay
+    setTimeout(init, 1000);
+  }
+}
+
+// Start the app
+init();
 </script>
 </body>
 </html>
