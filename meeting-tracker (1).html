@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Client Meeting Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#16233F;
+    --navy-2:#1E2E52;
+    --amber:#E8A33D;
+    --amber-dark:#B5761A;
+    --bg:#F3F5F8;
+    --surface:#FFFFFF;
+    --text:#1A2233;
+    --muted:#6B7280;
+    --line:#E4E7EC;
+    --success:#1F9D63;
+    --success-bg:#E5F6ED;
+    --warn:#B5761A;
+    --warn-bg:#FDF1DE;
+    --danger:#C0392B;
+    --danger-bg:#FBEAE8;
+    --info:#2563A8;
+    --info-bg:#E7F0FA;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);}
+  #app{max-width:440px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative;}
+
+  .topbar{background:var(--navy);color:#fff;padding:18px 18px 16px;position:sticky;top:0;z-index:10;}
+  .topbar-row{display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:32px;height:32px;border-radius:8px;background:var(--amber);display:flex;align-items:center;justify-content:center;color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:14px;}
+  .brand-name{font-family:'Sora',sans-serif;font-weight:600;font-size:16px;letter-spacing:0.2px;}
+  .icon-btn{background:rgba(255,255,255,0.1);border:none;color:#fff;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
+  .icon-btn:active{background:rgba(255,255,255,0.2);}
+
+  .content{flex:1;padding:16px 16px 90px;}
+
+  .search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:10px 14px;border:1px solid var(--line);margin-bottom:14px;}
+  .search-box input{border:none;outline:none;flex:1;font-size:15px;font-family:'Inter',sans-serif;background:transparent;color:var(--text);}
+  .search-box input::placeholder{color:var(--muted);}
+
+  .section-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin:18px 0 8px;}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+  .card:active{transform:scale(0.99);}
+  .client-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .client-name{font-weight:600;font-size:15px;}
+  .client-sub{font-size:13px;color:var(--muted);margin-top:2px;}
+  .client-code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber-dark);background:#FBF0DC;padding:3px 8px;border-radius:6px;white-space:nowrap;}
+
+  .meeting-row{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .meeting-main{flex:1;min-width:0;}
+  .meeting-name{font-weight:600;font-size:15px;}
+  .meeting-meta{font-size:13px;color:var(--muted);margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+  .badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+  .badge.scheduled{background:var(--info-bg);color:var(--info);}
+  .badge.completed{background:var(--success-bg);color:var(--success);}
+  .badge.rescheduled{background:var(--warn-bg);color:var(--warn);}
+  .badge.cancelled{background:var(--danger-bg);color:var(--danger);}
+
+  .empty{text-align:center;padding:50px 20px;color:var(--muted);}
+  .empty i{font-size:30px;display:block;margin-bottom:10px;opacity:0.5;}
+
+  .bottomnav{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;max-width:440px;margin:0 auto;width:100%;}
+  .navbtn{flex:1;border:none;background:none;padding:11px 0 9px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-family:'Inter',sans-serif;font-size:11px;font-weight:500;cursor:pointer;}
+  .navbtn.active{color:var(--navy);}
+  .navbtn .dot{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+
+  .sheet-overlay{position:fixed;inset:0;background:rgba(15,20,35,0.5);display:flex;align-items:flex-end;z-index:50;}
+  .sheet{background:var(--surface);width:100%;max-width:440px;margin:0 auto;border-radius:20px 20px 0 0;padding:20px 18px 24px;max-height:88vh;overflow-y:auto;}
+  .sheet-handle{width:36px;height:4px;background:var(--line);border-radius:3px;margin:0 auto 14px;}
+  .sheet-title{font-family:'Sora',sans-serif;font-weight:600;font-size:17px;margin-bottom:2px;}
+  .sheet-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+
+  label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 5px;}
+  input[type=text],input[type=date],input[type=time],select,textarea{
+    width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:#fff;outline:none;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--navy-2);}
+  textarea{resize:vertical;min-height:60px;}
+
+  .btn{width:100%;padding:13px;border-radius:11px;border:none;font-family:'Inter',sans-serif;font-weight:600;font-size:15px;cursor:pointer;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:active{background:var(--navy-2);}
+  .btn-amber{background:var(--amber);color:var(--navy);}
+  .btn-amber:active{background:var(--amber-dark);color:#fff;}
+  .btn-outline{background:none;border:1px solid var(--line);color:var(--text);}
+  .btn:disabled{opacity:0.5;}
+
+  .gps-box{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:14px;text-align:center;}
+  .gps-box.captured{border-style:solid;border-color:var(--success);background:var(--success-bg);}
+  .gps-coords{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--success);margin-top:6px;}
+  .gps-addr{font-size:12px;color:var(--muted);margin-top:4px;}
+  .pin{width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:17px;position:relative;}
+  .pin.pulse::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--success);animation:pulse 1.4s ease-out infinite;}
+  @keyframes pulse{0%{transform:scale(0.7);opacity:1;}100%{transform:scale(1.6);opacity:0;}}
+
+  .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:100;max-width:80%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.2);}
+
+  .config-wrap{padding:40px 22px;}
+  .config-logo{width:56px;height:56px;border-radius:16px;background:var(--amber);display:flex;align-items:center;justify-content:center;color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:22px;margin:0 auto 18px;}
+  .config-title{font-family:'Sora',sans-serif;font-weight:700;font-size:20px;text-align:center;}
+  .config-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5;}
+  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const STORAGE_KEY = 'meeting_tracker_config';
+let state = {
+  scriptUrl: null,
+  configuring: true,
+  tab: 'search',
+  query: '',
+  searchResults: [],
+  searching: false,
+  meetings: [],
+  meetingsLoading: false,
+  bookingClient: null,
+  updatingMeeting: null,
+  gps: null,
+  gpsCapturing: false,
+  toast: null,
+  repName: '',
+};
+
+async function loadConfig(){
+  try{
+    const cfg = await window.storage.get(STORAGE_KEY, true);
+    if(cfg && cfg.value){
+      const parsed = JSON.parse(cfg.value);
+      state.scriptUrl = parsed.scriptUrl || null;
+    }
+  }catch(e){}
+  try{
+    const rep = await window.storage.get('rep_name', false);
+    if(rep && rep.value) state.repName = rep.value;
+  }catch(e){}
+  state.configuring = !state.scriptUrl;
+  render();
+  if(state.scriptUrl) fetchMeetings();
+}
+
+async function saveScriptUrl(url){
+  await window.storage.set(STORAGE_KEY, JSON.stringify({scriptUrl:url}), true);
+  state.scriptUrl = url;
+  state.configuring = false;
+  render();
+  fetchMeetings();
+}
+
+async function saveRepName(name){
+  state.repName = name;
+  try{ await window.storage.set('rep_name', name, false); }catch(e){}
+}
+
+function showToast(msg, ms){
+  state.toast = msg;
+  render();
+  setTimeout(()=>{ state.toast=null; render(); }, ms||2200);
+}
+
+async function apiGet(action, params){
+  const url = new URL(state.scriptUrl);
+  url.searchParams.set('action', action);
+  Object.keys(params||{}).forEach(k=>url.searchParams.set(k, params[k]));
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+async function apiPost(payload){
+  const res = await fetch(state.scriptUrl, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  });
+  return res.json();
+}
+
+let searchDebounce;
+function onSearchInput(val){
+  state.query = val;
+  render();
+  clearTimeout(searchDebounce);
+  if(!val.trim()){ state.searchResults=[]; render(); return; }
+  searchDebounce = setTimeout(async ()=>{
+    state.searching = true; render();
+    try{
+      const data = await apiGet('search', {q: val});
+      state.searchResults = data.results || [];
+    }catch(e){
+      showToast('Could not reach the sheet. Check settings.');
+    }
+    state.searching = false;
+    render();
+  }, 380);
+}
+
+async function fetchMeetings(){
+  state.meetingsLoading = true; render();
+  try{
+    const data = await apiGet('list', {});
+    state.meetings = data.meetings || [];
+  }catch(e){
+    showToast('Could not load meetings.');
+  }
+  state.meetingsLoading = false;
+  render();
+}
+
+function openBooking(client){
+  state.bookingClient = client;
+  render();
+}
+
+async function submitBooking(form){
+  const payload = {
+    action:'book',
+    clientCode: state.bookingClient.clientCode,
+    clientName: state.bookingClient.name,
+    mobile: state.bookingClient.mobile,
+    email: state.bookingClient.email,
+    meetingDate: form.date,
+    meetingTime: form.time,
+    purpose: form.purpose,
+    notes: form.notes,
+    updatedBy: state.repName || '',
+  };
+  showToast('Booking meeting...', 60000);
+  try{
+    const res = await apiPost(payload);
+    if(res.success){
+      state.bookingClient = null;
+      state.query=''; state.searchResults=[];
+      showToast('Meeting booked');
+      fetchMeetings();
+      state.tab='meetings';
+    }else{
+      showToast(res.error || 'Could not book meeting');
+    }
+  }catch(e){
+    showToast('Network error while booking');
+  }
+  render();
+}
+
+function openUpdate(meeting){
+  state.updatingMeeting = meeting;
+  state.gps = null;
+  render();
+}
+
+function captureLocation(){
+  if(!navigator.geolocation){
+    showToast('Location not supported on this device');
+    return;
+  }
+  state.gpsCapturing = true; render();
+  navigator.geolocation.getCurrentPosition(async (pos)=>{
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    state.gps = {lat, lng, address: 'Looking up address...'};
+    state.gpsCapturing = false;
+    render();
+    try{
+      const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+      const j = await r.json();
+      const addr = [j.locality, j.city, j.principalSubdivision].filter(Boolean).join(', ');
+      state.gps.address = addr || 'Address unavailable';
+    }catch(e){
+      state.gps.address = 'Address lookup failed';
+    }
+    render();
+  }, (err)=>{
+    state.gpsCapturing = false;
+    showToast('Could not get location: ' + err.message);
+    render();
+  }, {enableHighAccuracy:true, timeout:12000});
+}
+
+async function submitUpdate(form){
+  const payload = {
+    action:'update',
+    meetingId: state.updatingMeeting.meetingID || state.updatingMeeting['meetingID'],
+    status: form.status,
+    notes: form.notes,
+    address: state.gps ? state.gps.address : '',
+    latitude: state.gps ? state.gps.lat : '',
+    longitude: state.gps ? state.gps.lng : '',
+    updatedBy: state.repName || '',
+  };
+  showToast('Saving update...', 60000);
+  try{
+    const res = await apiPost(payload);
+    if(res.success){
+      state.updatingMeeting = null;
+      state.gps = null;
+      showToast('Meeting updated');
+      fetchMeetings();
+    }else{
+      showToast(res.error || 'Could not update meeting');
+    }
+  }catch(e){
+    showToast('Network error while updating');
+  }
+  render();
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function statusClass(s){
+  s = (s||'scheduled').toLowerCase();
+  if(s.indexOf('complet')!==-1) return 'completed';
+  if(s.indexOf('resched')!==-1) return 'rescheduled';
+  if(s.indexOf('cancel')!==-1) return 'cancelled';
+  return 'scheduled';
+}
+
+function renderConfig(){
+  return `
+  <div class="topbar"><div class="brand"><div class="brand-mark">M</div><div class="brand-name">Meeting Tracker</div></div></div>
+  <div class="config-wrap">
+    <div class="config-logo">M</div>
+    <div class="config-title">Connect your sheet</div>
+    <div class="config-sub">Paste the Apps Script web app URL from your Google Sheet. Ask a teammate if someone already deployed it — you only need to do this once per device.</div>
+    <label>Web app URL</label>
+    <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
+    <label>Your name (for update history)</label>
+    <input type="text" id="cfgName" placeholder="e.g. Rahul Sharma" value="${esc(state.repName)}">
+    <button class="btn btn-primary" onclick="handleSaveConfig()">Save and continue</button>
+  </div>`;
+}
+
+window.handleSaveConfig = async function(){
+  const url = document.getElementById('cfgUrl').value.trim();
+  const name = document.getElementById('cfgName').value.trim();
+  if(!url){ showToast('Paste the web app URL first'); return; }
+  await saveRepName(name);
+  await saveScriptUrl(url);
+};
+
+function renderTopbar(title){
+  return `
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="brand"><div class="brand-mark">M</div><div class="brand-name">${title}</div></div>
+      <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">&#9881;</button>
+    </div>
+  </div>`;
+}
+
+window.handleOpenSettings = function(){
+  state.configuring = true;
+  render();
+};
+
+function renderSearchTab(){
+  let resultsHtml = '';
+  if(state.searching){
+    resultsHtml = `<div class="empty">Searching...</div>`;
+  } else if(state.query.trim() && state.searchResults.length===0){
+    resultsHtml = `<div class="empty">No clients match "${esc(state.query)}"</div>`;
+  } else if(state.searchResults.length){
+    resultsHtml = state.searchResults.map((c,i)=>{
+      const tag = c.clientCode || c.leadSource || '';
+      return `
+      <div class="card" onclick="handleOpenBooking(${i})">
+        <div class="client-row">
+          <div>
+            <div class="client-name">${esc(c.name)}</div>
+            <div class="client-sub">${esc(c.mobile)}${c.email? ' &middot; '+esc(c.email):''}</div>
+          </div>
+          ${tag ? `<div class="client-code">${esc(tag)}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    resultsHtml = `<div class="empty">Search by name, mobile number, PAN or client code to book a meeting.</div>`;
+  }
+  return `
+  ${renderTopbar('Search &amp; book')}
+  <div class="content">
+    <div class="search-box">
+      <span>&#128269;</span>
+      <input type="text" placeholder="Search clients..." value="${esc(state.query)}" oninput="onSearchInput(this.value)">
+    </div>
+    ${resultsHtml}
+  </div>`;
+}
+
+function renderMeetingsTab(){
+  let body;
+  if(state.meetingsLoading){
+    body = `<div class="empty">Loading meetings...</div>`;
+  } else if(!state.meetings.length){
+    body = `<div class="empty">No meetings yet. Book one from Search.</div>`;
+  } else {
+    body = state.meetings.map((m,i)=>`
+      <div class="card" onclick="handleOpenUpdate(${i})">
+        <div class="meeting-row">
+          <div class="meeting-main">
+            <div class="meeting-name">${esc(m.clientName)}</div>
+            <div class="meeting-meta">
+              <span>${esc(m.meetingDate)} ${esc(m.meetingTime)}</span>
+              ${m.address? '&middot; <span>&#128205; '+esc(m.address)+'</span>' : ''}
+            </div>
+          </div>
+          <span class="badge ${statusClass(m.status)}">${esc(m.status||'Scheduled')}</span>
+        </div>
+      </div>`).join('');
+  }
+  return `
+  ${renderTopbar('My meetings')}
+  <div class="content">
+    ${body}
+  </div>`;
+}
+
+function renderBottomNav(){
+  return `
+  <div class="bottomnav">
+    <button class="navbtn ${state.tab==='search'?'active':''}" onclick="handleTab('search')">
+      <span class="dot">&#128269;</span> Search &amp; book
+    </button>
+    <button class="navbtn ${state.tab==='meetings'?'active':''}" onclick="handleTab('meetings')">
+      <span class="dot">&#128197;</span> My meetings
+    </button>
+  </div>`;
+}
+
+window.handleTab = function(t){
+  state.tab = t;
+  if(t==='meetings') fetchMeetings();
+  render();
+};
+
+window.handleOpenBooking = function(i){
+  openBooking(state.searchResults[i]);
+};
+
+window.handleOpenUpdate = function(i){
+  openUpdate(state.meetings[i]);
+};
+
+function renderBookingSheet(){
+  if(!state.bookingClient) return '';
+  const c = state.bookingClient;
+  const today = new Date().toISOString().slice(0,10);
+  return `
+  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'booking')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Book meeting</div>
+      <div class="sheet-sub">${esc(c.name)} &middot; ${esc(c.mobile)}</div>
+      <label>Date</label>
+      <input type="date" id="bkDate" min="${today}" value="${today}">
+      <label>Time</label>
+      <input type="time" id="bkTime" value="10:00">
+      <label>Purpose</label>
+      <select id="bkPurpose">
+        <option>Account opening follow-up</option>
+        <option>Document collection</option>
+        <option>KYC verification</option>
+        <option>Welcome call</option>
+        <option>Other</option>
+      </select>
+      <label>Notes (optional)</label>
+      <textarea id="bkNotes" placeholder="Anything the team should know"></textarea>
+      <button class="btn btn-amber" onclick="handleSubmitBooking()">Confirm booking</button>
+      <button class="btn btn-outline" onclick="handleCloseSheet('booking')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+window.handleSubmitBooking = function(){
+  const form = {
+    date: document.getElementById('bkDate').value,
+    time: document.getElementById('bkTime').value,
+    purpose: document.getElementById('bkPurpose').value,
+    notes: document.getElementById('bkNotes').value,
+  };
+  if(!form.date || !form.time){ showToast('Pick a date and time'); return; }
+  submitBooking(form);
+};
+
+window.handleCloseSheet = function(which){
+  if(which==='booking') state.bookingClient = null;
+  if(which==='update'){ state.updatingMeeting = null; state.gps = null; }
+  render();
+};
+window.handleCloseSheetBg = function(e, which){
+  if(e.target.classList.contains('sheet-overlay')) handleCloseSheet(which);
+};
+
+function renderUpdateSheet(){
+  if(!state.updatingMeeting) return '';
+  const m = state.updatingMeeting;
+  const statuses = ['Scheduled','Completed','Rescheduled','Cancelled'];
+  let gpsHtml;
+  if(state.gpsCapturing){
+    gpsHtml = `<div class="gps-box"><div class="pin pulse">&#128205;</div><div>Getting your location...</div></div>`;
+  } else if(state.gps){
+    gpsHtml = `<div class="gps-box captured">
+      <div class="pin">&#128205;</div>
+      <div>Location captured</div>
+      <div class="gps-coords">${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)}</div>
+      <div class="gps-addr">${esc(state.gps.address)}</div>
+    </div>`;
+  } else {
+    gpsHtml = `<div class="gps-box">
+      <div class="pin">&#128205;</div>
+      <div style="margin-bottom:8px;">No location captured yet</div>
+      <button class="btn btn-outline" style="margin-top:0;" onclick="captureLocation()">Capture my location</button>
+    </div>`;
+  }
+  return `
+  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'update')">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Update meeting</div>
+      <div class="sheet-sub">${esc(m.clientName)} &middot; ${esc(m.meetingDate)} ${esc(m.meetingTime)}</div>
+      <label>Status</label>
+      <select id="upStatus">
+        ${statuses.map(s=>`<option ${((m.status||'Scheduled')===s)?'selected':''}>${s}</option>`).join('')}
+      </select>
+      <label>Notes</label>
+      <textarea id="upNotes" placeholder="Meeting outcome, next steps...">${esc(m.notes||'')}</textarea>
+      ${gpsHtml}
+      <button class="btn btn-primary" onclick="handleSubmitUpdate()">Save update</button>
+      <button class="btn btn-outline" onclick="handleCloseSheet('update')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+window.handleSubmitUpdate = function(){
+  const form = {
+    status: document.getElementById('upStatus').value,
+    notes: document.getElementById('upNotes').value,
+  };
+  submitUpdate(form);
+};
+
+function renderToast(){
+  if(!state.toast) return '';
+  return `<div class="toast">${esc(state.toast)}</div>`;
+}
+
+function render(){
+  const app = document.getElementById('app');
+  if(state.configuring){
+    app.innerHTML = renderConfig();
+    return;
+  }
+  let body = state.tab==='search' ? renderSearchTab() : renderMeetingsTab();
+  app.innerHTML = `
+    ${body}
+    ${renderBottomNav()}
+    ${renderBookingSheet()}
+    ${renderUpdateSheet()}
+    ${renderToast()}
+  `;
+}
+
+loadConfig();
+</script>
+</body>
+</html>
