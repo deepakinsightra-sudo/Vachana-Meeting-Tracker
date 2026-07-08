@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Client Meeting Tracker</title>
+<title>Lead Meeting Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -48,13 +48,12 @@
 
   .section-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin:18px 0 8px;}
 
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer;}
   .card:active{transform:scale(0.99);}
   .client-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
   .client-name{font-weight:600;font-size:15px;}
   .client-sub{font-size:13px;color:var(--muted);margin-top:2px;}
-  .client-code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber-dark);background:#FBF0DC;padding:3px 8px;border-radius:6px;white-space:nowrap;}
-
+  
   .meeting-row{display:flex;justify-content:space-between;align-items:center;gap:10px;}
   .meeting-main{flex:1;min-width:0;}
   .meeting-name{font-weight:600;font-size:15px;}
@@ -64,6 +63,7 @@
   .badge.completed{background:var(--success-bg);color:var(--success);}
   .badge.rescheduled{background:var(--warn-bg);color:var(--warn);}
   .badge.cancelled{background:var(--danger-bg);color:var(--danger);}
+  .badge.pipeline{background:var(--warn-bg);color:var(--warn);}
 
   .empty{text-align:center;padding:50px 20px;color:var(--muted);}
   .empty i{font-size:30px;display:block;margin-bottom:10px;opacity:0.5;}
@@ -110,12 +110,29 @@
   .config-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5;}
   .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
+  
+  .stage-badge{font-size:10px;padding:2px 8px;border-radius:12px;background:var(--warn-bg);color:var(--warn);}
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <script>
+// Simple localStorage wrapper (replaces the mobile storage)
+const storage = {
+  get: (key) => {
+    try {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch { return null; }
+  },
+  set: (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch(e) {}
+  }
+};
+
 const STORAGE_KEY = 'meeting_tracker_config';
 let state = {
   scriptUrl: null,
@@ -136,32 +153,49 @@ let state = {
 
 async function loadConfig(){
   try{
-    const cfg = await window.storage.get(STORAGE_KEY, true);
-    if(cfg && cfg.value){
-      const parsed = JSON.parse(cfg.value);
-      state.scriptUrl = parsed.scriptUrl || null;
+    const cfg = storage.get(STORAGE_KEY);
+    if(cfg && cfg.scriptUrl){
+      state.scriptUrl = cfg.scriptUrl;
     }
   }catch(e){}
   try{
-    const rep = await window.storage.get('rep_name', false);
-    if(rep && rep.value) state.repName = rep.value;
+    const rep = storage.get('rep_name');
+    if(rep) state.repName = rep;
   }catch(e){}
   state.configuring = !state.scriptUrl;
   render();
-  if(state.scriptUrl) fetchMeetings();
+  if(state.scriptUrl) {
+    // Test the connection
+    await testConnection();
+    fetchMeetings();
+  }
+}
+
+async function testConnection() {
+  try {
+    const data = await apiGet('test', {});
+    if (data.success) {
+      showToast('Connected to sheet successfully!');
+    } else {
+      showToast('Connected but got error: ' + (data.error || 'Unknown'));
+    }
+  } catch(e) {
+    showToast('Could not connect. Check URL and permissions.');
+  }
 }
 
 async function saveScriptUrl(url){
-  await window.storage.set(STORAGE_KEY, JSON.stringify({scriptUrl:url}), true);
+  storage.set(STORAGE_KEY, {scriptUrl: url});
   state.scriptUrl = url;
   state.configuring = false;
   render();
+  await testConnection();
   fetchMeetings();
 }
 
 async function saveRepName(name){
   state.repName = name;
-  try{ await window.storage.set('rep_name', name, false); }catch(e){}
+  storage.set('rep_name', name);
 }
 
 function showToast(msg, ms){
@@ -226,13 +260,14 @@ function openBooking(client){
 async function submitBooking(form){
   const payload = {
     action:'book',
-    clientCode: state.bookingClient.clientCode,
-    clientName: state.bookingClient.name,
+    leadName: state.bookingClient.name,
     mobile: state.bookingClient.mobile,
     email: state.bookingClient.email,
+    company: state.bookingClient.company || '',
     meetingDate: form.date,
     meetingTime: form.time,
     purpose: form.purpose,
+    pipelineStage: 'Meeting Scheduled',
     notes: form.notes,
     updatedBy: state.repName || '',
   };
@@ -242,7 +277,7 @@ async function submitBooking(form){
     if(res.success){
       state.bookingClient = null;
       state.query=''; state.searchResults=[];
-      showToast('Meeting booked');
+      showToast('Meeting booked!');
       fetchMeetings();
       state.tab='meetings';
     }else{
@@ -327,13 +362,13 @@ function statusClass(s){
 
 function renderConfig(){
   return `
-  <div class="topbar"><div class="brand"><div class="brand-mark">M</div><div class="brand-name">Meeting Tracker</div></div></div>
+  <div class="topbar"><div class="brand"><div class="brand-mark">L</div><div class="brand-name">Lead Tracker</div></div></div>
   <div class="config-wrap">
-    <div class="config-logo">M</div>
+    <div class="config-logo">L</div>
     <div class="config-title">Connect your sheet</div>
-    <div class="config-sub">Paste the Apps Script web app URL from your Google Sheet. Ask a teammate if someone already deployed it — you only need to do this once per device.</div>
+    <div class="config-sub">Paste the Apps Script web app URL from your Google Sheet.</div>
     <label>Web app URL</label>
-    <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
+    <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${state.scriptUrl || ''}">
     <label>Your name (for update history)</label>
     <input type="text" id="cfgName" placeholder="e.g. Rahul Sharma" value="${esc(state.repName)}">
     <button class="btn btn-primary" onclick="handleSaveConfig()">Save and continue</button>
@@ -352,8 +387,8 @@ function renderTopbar(title){
   return `
   <div class="topbar">
     <div class="topbar-row">
-      <div class="brand"><div class="brand-mark">M</div><div class="brand-name">${title}</div></div>
-      <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">&#9881;</button>
+      <div class="brand"><div class="brand-mark">L</div><div class="brand-name">${title}</div></div>
+      <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">⚙️</button>
     </div>
   </div>`;
 }
@@ -368,30 +403,28 @@ function renderSearchTab(){
   if(state.searching){
     resultsHtml = `<div class="empty">Searching...</div>`;
   } else if(state.query.trim() && state.searchResults.length===0){
-    resultsHtml = `<div class="empty">No clients match "${esc(state.query)}"</div>`;
+    resultsHtml = `<div class="empty">No leads match "${esc(state.query)}"</div>`;
   } else if(state.searchResults.length){
     resultsHtml = state.searchResults.map((c,i)=>{
-      const tag = c.clientCode || c.leadSource || '';
       return `
       <div class="card" onclick="handleOpenBooking(${i})">
         <div class="client-row">
           <div>
             <div class="client-name">${esc(c.name)}</div>
-            <div class="client-sub">${esc(c.mobile)}${c.email? ' &middot; '+esc(c.email):''}</div>
+            <div class="client-sub">${esc(c.mobile)}${c.email? ' &middot; '+esc(c.email):''}${c.company? ' &middot; '+esc(c.company):''}</div>
           </div>
-          ${tag ? `<div class="client-code">${esc(tag)}</div>` : ''}
         </div>
       </div>`;
     }).join('');
   } else {
-    resultsHtml = `<div class="empty">Search by name, mobile number, PAN or client code to book a meeting.</div>`;
+    resultsHtml = `<div class="empty">🔍 Search by name, mobile number, or email to book a meeting.</div>`;
   }
   return `
-  ${renderTopbar('Search &amp; book')}
+  ${renderTopbar('Search & book')}
   <div class="content">
     <div class="search-box">
-      <span>&#128269;</span>
-      <input type="text" placeholder="Search clients..." value="${esc(state.query)}" oninput="onSearchInput(this.value)">
+      <span>🔍</span>
+      <input type="text" placeholder="Search leads..." value="${esc(state.query)}" oninput="onSearchInput(this.value)">
     </div>
     ${resultsHtml}
   </div>`;
@@ -402,21 +435,25 @@ function renderMeetingsTab(){
   if(state.meetingsLoading){
     body = `<div class="empty">Loading meetings...</div>`;
   } else if(!state.meetings.length){
-    body = `<div class="empty">No meetings yet. Book one from Search.</div>`;
+    body = `<div class="empty">📅 No meetings yet. Book one from Search.</div>`;
   } else {
-    body = state.meetings.map((m,i)=>`
+    body = state.meetings.map((m,i)=>{
+      const stage = m.pipelinestage || 'New Lead';
+      return `
       <div class="card" onclick="handleOpenUpdate(${i})">
         <div class="meeting-row">
           <div class="meeting-main">
-            <div class="meeting-name">${esc(m.clientName)}</div>
+            <div class="meeting-name">${esc(m.leadName)}</div>
             <div class="meeting-meta">
-              <span>${esc(m.meetingDate)} ${esc(m.meetingTime)}</span>
-              ${m.address? '&middot; <span>&#128205; '+esc(m.address)+'</span>' : ''}
+              <span>📅 ${esc(m.meetingDate)} ${esc(m.meetingTime)}</span>
+              ${m.address? ' &middot; 📍 '+esc(m.address) : ''}
+              <span class="stage-badge">${esc(stage)}</span>
             </div>
           </div>
           <span class="badge ${statusClass(m.status)}">${esc(m.status||'Scheduled')}</span>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
   return `
   ${renderTopbar('My meetings')}
@@ -429,10 +466,10 @@ function renderBottomNav(){
   return `
   <div class="bottomnav">
     <button class="navbtn ${state.tab==='search'?'active':''}" onclick="handleTab('search')">
-      <span class="dot">&#128269;</span> Search &amp; book
+      <span class="dot">🔍</span> Search &amp; book
     </button>
     <button class="navbtn ${state.tab==='meetings'?'active':''}" onclick="handleTab('meetings')">
-      <span class="dot">&#128197;</span> My meetings
+      <span class="dot">📅</span> My meetings
     </button>
   </div>`;
 }
@@ -456,121 +493,4 @@ function renderBookingSheet(){
   const c = state.bookingClient;
   const today = new Date().toISOString().slice(0,10);
   return `
-  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'booking')">
-    <div class="sheet" onclick="event.stopPropagation()">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title">Book meeting</div>
-      <div class="sheet-sub">${esc(c.name)} &middot; ${esc(c.mobile)}</div>
-      <label>Date</label>
-      <input type="date" id="bkDate" min="${today}" value="${today}">
-      <label>Time</label>
-      <input type="time" id="bkTime" value="10:00">
-      <label>Purpose</label>
-      <select id="bkPurpose">
-        <option>Account opening follow-up</option>
-        <option>Document collection</option>
-        <option>KYC verification</option>
-        <option>Welcome call</option>
-        <option>Other</option>
-      </select>
-      <label>Notes (optional)</label>
-      <textarea id="bkNotes" placeholder="Anything the team should know"></textarea>
-      <button class="btn btn-amber" onclick="handleSubmitBooking()">Confirm booking</button>
-      <button class="btn btn-outline" onclick="handleCloseSheet('booking')">Cancel</button>
-    </div>
-  </div>`;
-}
-
-window.handleSubmitBooking = function(){
-  const form = {
-    date: document.getElementById('bkDate').value,
-    time: document.getElementById('bkTime').value,
-    purpose: document.getElementById('bkPurpose').value,
-    notes: document.getElementById('bkNotes').value,
-  };
-  if(!form.date || !form.time){ showToast('Pick a date and time'); return; }
-  submitBooking(form);
-};
-
-window.handleCloseSheet = function(which){
-  if(which==='booking') state.bookingClient = null;
-  if(which==='update'){ state.updatingMeeting = null; state.gps = null; }
-  render();
-};
-window.handleCloseSheetBg = function(e, which){
-  if(e.target.classList.contains('sheet-overlay')) handleCloseSheet(which);
-};
-
-function renderUpdateSheet(){
-  if(!state.updatingMeeting) return '';
-  const m = state.updatingMeeting;
-  const statuses = ['Scheduled','Completed','Rescheduled','Cancelled'];
-  let gpsHtml;
-  if(state.gpsCapturing){
-    gpsHtml = `<div class="gps-box"><div class="pin pulse">&#128205;</div><div>Getting your location...</div></div>`;
-  } else if(state.gps){
-    gpsHtml = `<div class="gps-box captured">
-      <div class="pin">&#128205;</div>
-      <div>Location captured</div>
-      <div class="gps-coords">${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)}</div>
-      <div class="gps-addr">${esc(state.gps.address)}</div>
-    </div>`;
-  } else {
-    gpsHtml = `<div class="gps-box">
-      <div class="pin">&#128205;</div>
-      <div style="margin-bottom:8px;">No location captured yet</div>
-      <button class="btn btn-outline" style="margin-top:0;" onclick="captureLocation()">Capture my location</button>
-    </div>`;
-  }
-  return `
-  <div class="sheet-overlay" onclick="handleCloseSheetBg(event,'update')">
-    <div class="sheet" onclick="event.stopPropagation()">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title">Update meeting</div>
-      <div class="sheet-sub">${esc(m.clientName)} &middot; ${esc(m.meetingDate)} ${esc(m.meetingTime)}</div>
-      <label>Status</label>
-      <select id="upStatus">
-        ${statuses.map(s=>`<option ${((m.status||'Scheduled')===s)?'selected':''}>${s}</option>`).join('')}
-      </select>
-      <label>Notes</label>
-      <textarea id="upNotes" placeholder="Meeting outcome, next steps...">${esc(m.notes||'')}</textarea>
-      ${gpsHtml}
-      <button class="btn btn-primary" onclick="handleSubmitUpdate()">Save update</button>
-      <button class="btn btn-outline" onclick="handleCloseSheet('update')">Cancel</button>
-    </div>
-  </div>`;
-}
-
-window.handleSubmitUpdate = function(){
-  const form = {
-    status: document.getElementById('upStatus').value,
-    notes: document.getElementById('upNotes').value,
-  };
-  submitUpdate(form);
-};
-
-function renderToast(){
-  if(!state.toast) return '';
-  return `<div class="toast">${esc(state.toast)}</div>`;
-}
-
-function render(){
-  const app = document.getElementById('app');
-  if(state.configuring){
-    app.innerHTML = renderConfig();
-    return;
-  }
-  let body = state.tab==='search' ? renderSearchTab() : renderMeetingsTab();
-  app.innerHTML = `
-    ${body}
-    ${renderBottomNav()}
-    ${renderBookingSheet()}
-    ${renderUpdateSheet()}
-    ${renderToast()}
-  `;
-}
-
-loadConfig();
-</script>
-</body>
-</html>
+  <div
