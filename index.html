@@ -35,21 +35,22 @@
 
   .topbar{background:var(--surface);color:var(--text);padding:12px 18px;position:sticky;top:0;z-index:10;border-bottom:2px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,0.04);}
   .topbar-row{display:flex;align-items:center;justify-content:space-between;}
-  .brand{display:flex;align-items:center;gap:10px;}
-  .brand-mark{width:34px;height:34px;border-radius:9px;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:15px;flex-shrink:0;}
-  .brand-logo-img{height:32px;width:auto;max-width:120px;object-fit:contain;flex-shrink:0;}
-  .login-logo{width:120px;height:auto;margin:0 auto 18px;display:block;object-fit:contain;}
-  .brand-text{display:flex;flex-direction:column;}
+  .brand{display:flex;align-items:center;gap:10px;pointer-events:none;user-select:none;-webkit-user-select:none;}
+  .brand-logo-img{height:32px;width:auto;max-width:120px;object-fit:contain;flex-shrink:0;pointer-events:none;user-select:none;-webkit-user-select:none;}
+  .brand-text{display:flex;flex-direction:column;pointer-events:none;user-select:none;-webkit-user-select:none;}
   .brand-name{font-family:'Sora',sans-serif;font-weight:600;font-size:15px;color:var(--navy);}
   .brand-sub{font-size:9px;opacity:0.6;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--navy);}
   .icon-btn{background:rgba(10,22,40,0.05);border:1px solid rgba(10,22,40,0.1);color:var(--navy);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
-  .icon-btn:active{background:rgba(10,22,40,0.1);}
 
   .content{flex:1;padding:16px 16px 90px;}
 
   .search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:10px 14px;border:2px solid var(--gold-light);margin-bottom:14px;}
   .search-box input{border:none;outline:none;flex:1;font-size:15px;font-family:'Inter',sans-serif;background:transparent;color:var(--text);}
   .search-box input::placeholder{color:var(--muted);}
+
+  .search-btn{background:var(--gold);color:var(--navy);border:none;padding:8px 16px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;}
+  .search-btn:active{background:var(--gold-dark);color:#fff;}
+  .search-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
   .card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer;}
   .card:active{transform:scale(0.98);}
@@ -67,12 +68,7 @@
   .badge.rescheduled{background:var(--warn-bg);color:var(--warn);}
   .badge.cancelled{background:var(--danger-bg);color:var(--danger);}
   .badge.lost{background:var(--danger-bg);color:var(--danger);}
-  .badge.inprogress{background:var(--warn-bg);color:var(--warn);}
   .stage-badge{font-size:10px;padding:2px 8px;border-radius:12px;font-weight:600;white-space:nowrap;}
-  .meeting-location{font-size:12px;color:var(--muted);margin-top:5px;}
-  .meeting-location a{color:var(--info);text-decoration:none;font-weight:600;}
-  .meeting-notes-preview{font-size:12px;color:var(--muted);margin-top:4px;font-style:italic;}
-
   .empty{text-align:center;padding:50px 20px;color:var(--muted);}
 
   .bottomnav{position:sticky;bottom:0;background:var(--surface);border-top:2px solid var(--gold-light);display:flex;max-width:440px;margin:0 auto;width:100%;z-index:10;}
@@ -100,7 +96,6 @@
   .btn-gold{background:var(--gold);color:var(--navy);}
   .btn-gold:active{background:var(--gold-dark);color:#fff;}
   .btn-outline{background:none;border:2px solid var(--line);color:var(--text);}
-  .btn:disabled{opacity:0.5;}
 
   .gps-box{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:14px;text-align:center;}
   .gps-box.captured{border-style:solid;border-color:var(--success);background:var(--success-bg);}
@@ -153,6 +148,14 @@ const storage = {
   }
 };
 
+// SPANCO stages - exact match
+const SPANCO_STAGES = ['SUSPECT', 'PROSPECT', 'APPROACH', 'NEGOTIATION', 'CLOSE', 'ORDER LOST'];
+const SPANCO_COLORS = {
+  'SUSPECT':'#6B7280','PROSPECT':'#2563A8','APPROACH':'#7C3AED',
+  'NEGOTIATION':'#EA580C','CLOSE':'#1F9D63','ORDER LOST':'#DC2626'
+};
+
+// Pipeline stages
 const PIPELINE_STAGES = [
   'Lead In','Qualified Lead','Meeting Scheduled','First Meeting',
   'Proposal Sent','Under Review','Negotiation','Decision Pending',
@@ -163,12 +166,6 @@ const STAGE_COLORS = {
   'Lead In':'#6B7280','Qualified Lead':'#2563A8','Meeting Scheduled':'#7C3AED',
   'First Meeting':'#DB2777','Proposal Sent':'#C9A84C','Under Review':'#EA580C',
   'Negotiation':'#DC2626','Decision Pending':'#7C3AED','Client Onboarded':'#1F9D63','Lost':'#6B7280'
-};
-
-const SPANCO_STAGES = ['Suspect','Prospect','Approach','Negotiation','Close','Order'];
-const SPANCO_COLORS = {
-  'Suspect':'#6B7280','Prospect':'#2563A8','Approach':'#7C3AED',
-  'Negotiation':'#EA580C','Close':'#1F9D63','Order':'#C9A84C'
 };
 
 const STORAGE_KEY = 'vachana_tracker_config';
@@ -243,38 +240,54 @@ function showToast(msg, ms){
 }
 
 async function apiGet(action, params){
-  const url = new URL(state.scriptUrl);
-  url.searchParams.set('action', action);
-  Object.keys(params||{}).forEach(k=>url.searchParams.set(k, params[k]));
-  const res = await fetch(url.toString());
-  return res.json();
+  try {
+    const url = new URL(state.scriptUrl);
+    url.searchParams.set('action', action);
+    Object.keys(params||{}).forEach(k=>url.searchParams.set(k, params[k]));
+    const res = await fetch(url.toString());
+    return res.json();
+  } catch(e) {
+    console.error('API Get Error:', e);
+    return { error: e.message };
+  }
 }
 
 async function apiPost(payload){
-  const res = await fetch(state.scriptUrl, {
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify(payload)
-  });
-  return res.json();
+  try {
+    const res = await fetch(state.scriptUrl, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    return res.json();
+  } catch(e) {
+    console.error('API Post Error:', e);
+    return { error: e.message };
+  }
 }
 
-let searchDebounce;
+// FIX 1: Search only when button is clicked
+function performSearch(){
+  const val = state.query;
+  if(!val.trim()){ state.searchResults=[]; render(); return; }
+  
+  state.searching = true; render();
+  apiGet('search', {q: val})
+    .then(data => {
+      state.searchResults = data.results || [];
+      state.searching = false;
+      render();
+    })
+    .catch(e => {
+      showToast('Could not reach the sheet. Check settings.');
+      state.searching = false;
+      render();
+    });
+}
+
 function onSearchInput(val){
   state.query = val;
-  clearTimeout(searchDebounce);
-  if(!val.trim()){ state.searchResults=[]; render(); return; }
-  searchDebounce = setTimeout(async ()=>{
-    state.searching = true; render();
-    try{
-      const data = await apiGet('search', {q: val});
-      state.searchResults = data.results || [];
-    }catch(e){
-      showToast('Could not reach the sheet. Check settings.');
-    }
-    state.searching = false;
-    render();
-  }, 380);
+  render();
 }
 
 async function fetchMeetings(){
@@ -304,10 +317,17 @@ async function fetchPipelineStats(){
 async function fetchSpancoStats(){
   state.spancoLoading = true; render();
   try{
+    // FIX 2: Using the correct column name "lead Pipeline Stages"
     const data = await apiGet('spanco', {});
-    state.spancoStats = data;
+    console.log('SPANCO Stats Response:', data);
+    if(data.error){
+      state.spancoStats = { error: data.error };
+    } else {
+      state.spancoStats = data;
+    }
   }catch(e){
-    console.error('SPANCO stats error', e);
+    console.error('SPANCO stats error:', e);
+    state.spancoStats = { error: 'Failed to load SPANCO stats: ' + e.message };
   }
   state.spancoLoading = false;
   render();
@@ -418,8 +438,10 @@ async function updatePipelineStage(meetingId, newStage){
   try{
     const res = await apiPost({ action:'updateStage', meetingId: meetingId, pipelineStage: newStage, updatedBy: state.repName || '' });
     if(!res.success) showToast(res.error || 'Could not update stage');
+    return res.success;
   }catch(e){
     showToast('Network error while updating stage');
+    return false;
   }
 }
 
@@ -439,12 +461,10 @@ const LOGO_URL = 'https://vachanainvestments.com/wp-content/uploads/2023/09/Logo
 function renderConfig(){
   return `
   <div class="topbar"><div class="topbar-row"><div class="brand">
-    <img src="${LOGO_URL}" alt="Vachana" class="brand-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-    <div class="brand-mark" style="display:none;">V</div>
+    <img src="${LOGO_URL}" alt="Vachana" class="brand-logo-img">
     <div class="brand-text"><div class="brand-name">Vachana Tracker</div><div class="brand-sub">Investments Pvt Ltd</div></div></div></div></div>
   <div class="config-wrap">
-    <img src="${LOGO_URL}" alt="Vachana Investments" class="login-logo" onerror="this.style.display='none';document.getElementById('cfgFallbackLogo').style.display='flex';">
-    <div class="config-logo" id="cfgFallbackLogo" style="display:none;">V</div>
+    <img src="${LOGO_URL}" alt="Vachana Investments" class="login-logo">
     <div class="config-title">Connect your sheet</div>
     <div class="config-sub">Paste the Apps Script web app URL from your Google Sheet. One-time setup per device.</div>
     <label>Web app URL</label>
@@ -468,8 +488,7 @@ function renderTopbar(title){
   <div class="topbar">
     <div class="topbar-row">
       <div class="brand">
-        <img src="${LOGO_URL}" alt="Vachana" class="brand-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-        <div class="brand-mark" style="display:none;">V</div>
+        <img src="${LOGO_URL}" alt="Vachana" class="brand-logo-img">
         <div class="brand-text"><div class="brand-name">${title}</div><div class="brand-sub">Vachana Investments</div></div>
       </div>
       <button class="icon-btn" onclick="handleOpenSettings()" aria-label="Settings">&#9881;</button>
@@ -490,7 +509,6 @@ function renderSearchTab(){
     resultsHtml = `<div class="empty">No leads match "${esc(state.query)}"</div>`;
   } else if(state.searchResults.length){
     resultsHtml = state.searchResults.map((c,i)=>{
-      const tag = c.clientCode || c.leadSource || '';
       return `
       <div class="card" onclick="handleOpenBooking(${i})">
         <div class="client-row">
@@ -498,16 +516,19 @@ function renderSearchTab(){
             <div class="client-name">${esc(c.name)}</div>
             <div class="client-sub">${esc(c.mobile)}${c.email? ' &middot; '+esc(c.email):''}</div>
           </div>
-          ${tag? `<div class="badge scheduled">${esc(tag)}</div>` : ''}
         </div>
       </div>`;
     }).join('');
   } else {
-    resultsHtml = `<div class="empty">Search by name, mobile number, or email to book a meeting.</div>`;
+    resultsHtml = `<div class="empty">Type a name, mobile number, or email and click Search.</div>`;
   }
   return renderTopbar('Search &amp; book') + `
   <div class="content">
-    <div class="search-box"><span>&#128269;</span><input type="text" placeholder="Search leads..." value="${esc(state.query)}" oninput="onSearchInput(this.value)"></div>
+    <div class="search-box">
+      <span>&#128269;</span>
+      <input type="text" placeholder="Search leads..." value="${esc(state.query)}" oninput="onSearchInput(this.value)" onkeypress="if(event.key==='Enter') performSearch()">
+      <button class="search-btn" onclick="performSearch()">Search</button>
+    </div>
     ${resultsHtml}
   </div>`;
 }
@@ -518,10 +539,10 @@ function renderSpancoDashboard(){
     return `<div class="pipeline-container"><div class="empty">Loading lead stages...</div></div>`;
   }
   if(stats.error){
-    return `<div class="pipeline-container"><div class="empty">${esc(stats.error)}</div></div>`;
+    return `<div class="pipeline-container"><div class="empty">Error: ${esc(stats.error)}</div></div>`;
   }
   if(stats.columnFound === false){
-    return `<div class="pipeline-container"><div class="empty">Couldn't find a SPANCO/Lead Stage column on your sheet. Check the column name.</div></div>`;
+    return `<div class="pipeline-container"><div class="empty">Couldn't find "lead Pipeline Stages" column on your sheet. Please add this column to your LEADS sheet.</div></div>`;
   }
   const total = stats.total || 0;
   const stagesHtml = SPANCO_STAGES.map(stage=>{
@@ -590,9 +611,6 @@ function renderMeetingsTab(){
       const stage = m.pipelineStage || 'Lead In';
       const color = STAGE_COLORS[stage] || '#6B7280';
       const status = m.status || 'Scheduled';
-      const hasLocation = m.latitude && m.longitude;
-      const mapLink = hasLocation ? `https://www.google.com/maps?q=${m.latitude},${m.longitude}` : null;
-      const notesPreview = m.notes ? (String(m.notes).length > 60 ? esc(m.notes).slice(0,60)+'...' : esc(m.notes)) : '';
       return `
       <div class="card" onclick="handleOpenUpdate(${i})">
         <div class="meeting-row">
@@ -603,8 +621,6 @@ function renderMeetingsTab(){
               ${m.investmentAmount? ` &middot; <span>&#8377;${esc(m.investmentAmount)}</span>` : ''}
               <span class="stage-badge" style="background:${color}22;color:${color}">${esc(stage)}</span>
             </div>
-            ${m.address? `<div class="meeting-location">&#128205; ${esc(m.address)}${mapLink? ` &middot; <a href="${mapLink}" target="_blank" onclick="event.stopPropagation()">View on map</a>`:''}</div>` : ''}
-            ${notesPreview? `<div class="meeting-notes-preview">${notesPreview}</div>` : ''}
           </div>
           <span class="badge ${statusClass(status)}">${esc(status)}</span>
         </div>
@@ -649,6 +665,8 @@ function renderBookingSheet(){
       <div class="sheet-handle"></div>
       <div class="sheet-title">Book meeting</div>
       <div class="sheet-sub">${esc(c.name)} &middot; ${esc(c.mobile)}</div>
+      <label>Client name</label>
+      <input type="text" id="bkClientName" value="${esc(c.name)}" readonly style="background:#f5f3f0;cursor:not-allowed;">
       <label>Date</label><input type="date" id="bkDate" min="${today}" value="${today}">
       <label>Time</label><input type="time" id="bkTime" value="10:00">
       <label>Investment amount (&#8377;)</label><input type="number" id="bkAmount" class="amount-input" placeholder="e.g. 500000">
