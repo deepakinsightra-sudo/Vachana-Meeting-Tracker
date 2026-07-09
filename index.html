@@ -149,13 +149,6 @@ const storage = {
   }
 };
 
-// SPANCO stages - exact match
-const SPANCO_STAGES = ['SUSPECT', 'PROSPECT', 'APPROACH', 'NEGOTIATION', 'CLOSE', 'ORDER LOST'];
-const SPANCO_COLORS = {
-  'SUSPECT':'#6B7280','PROSPECT':'#2563A8','APPROACH':'#7C3AED',
-  'NEGOTIATION':'#EA580C','CLOSE':'#1F9D63','ORDER LOST':'#DC2626'
-};
-
 // Pipeline stages
 const PIPELINE_STAGES = [
   'Lead In','Qualified Lead','Meeting Scheduled','First Meeting',
@@ -188,9 +181,7 @@ let state = {
   toast: null,
   repName: '',
   pipelineStats: null,
-  pipelineLoading: false,
-  spancoStats: null,
-  spancoLoading: false
+  pipelineLoading: false
 };
 
 function loadConfig(){
@@ -204,7 +195,6 @@ function loadConfig(){
     testConnection();
     fetchMeetings();
     fetchPipelineStats();
-    fetchSpancoStats();
   }
 }
 
@@ -226,7 +216,6 @@ function saveScriptUrl(url){
   testConnection();
   fetchMeetings();
   fetchPipelineStats();
-  fetchSpancoStats();
 }
 
 function saveRepName(name){
@@ -328,23 +317,6 @@ async function fetchPipelineStats(){
   render();
 }
 
-async function fetchSpancoStats(){
-  state.spancoLoading = true; render();
-  try{
-    const data = await apiGet('spanco', {});
-    if(data.error){
-      state.spancoStats = { error: data.error };
-    } else {
-      state.spancoStats = data;
-    }
-  }catch(e){
-    console.error('SPANCO stats error:', e);
-    state.spancoStats = { error: 'Failed to load SPANCO stats: ' + e.message };
-  }
-  state.spancoLoading = false;
-  render();
-}
-
 function openBooking(client){
   // Make sure client has a name property
   if(client && client.name){
@@ -366,7 +338,21 @@ async function submitBooking(form){
     showToast('Error: No client selected');
     return;
   }
-  
+
+  // Safety net: a proper lead name should never look like a JS date string
+  // (e.g. "Wed Jul 08 2026 00:00:00 GMT+0530..."). If it does, something
+  // upstream picked the wrong field — refuse to save it and ask the rep
+  // to search again instead of silently writing garbage into the sheet.
+  const nameStr = String(state.bookingClient.name);
+  const looksLikeDate = /GMT|\d{4}.*\d{2}:\d{2}:\d{2}/.test(nameStr) ||
+    /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) [A-Z][a-z]{2} \d{1,2} \d{4}/.test(nameStr);
+  if(looksLikeDate){
+    showToast('Client name looks wrong — please search and reselect the lead.');
+    state.bookingClient = null;
+    render();
+    return;
+  }
+
   const payload = {
     action:'book',
     clientCode: state.bookingClient.clientCode || '',
@@ -564,41 +550,6 @@ function renderSearchTab(){
   </div>`;
 }
 
-function renderSpancoDashboard(){
-  const stats = state.spancoStats;
-  if(!stats || state.spancoLoading){
-    return `<div class="pipeline-container"><div class="empty">Loading lead stages...</div></div>`;
-  }
-  if(stats.error){
-    return `<div class="pipeline-container"><div class="empty">Error: ${esc(stats.error)}</div></div>`;
-  }
-  if(stats.columnFound === false){
-    return `<div class="pipeline-container"><div class="empty">Couldn't find "Lead Pipeline Stages" column. Please add this column to your LEADS sheet.</div></div>`;
-  }
-  const total = stats.total || 0;
-  const stagesHtml = SPANCO_STAGES.map(stage=>{
-    const count = (stats.stats && stats.stats[stage]) || 0;
-    const pct = (stats.conversionRates && stats.conversionRates[stage]) || '0%';
-    const barWidth = total > 0 ? Math.round((count/total)*100) : 0;
-    const color = SPANCO_COLORS[stage] || '#6B7280';
-    return `
-      <div class="stage-item">
-        <div class="stage-name"><span class="stage-color-dot" style="background:${color}"></span>${stage}</div>
-        <div class="stage-bar"><div class="stage-fill" style="width:${barWidth}%;background:${color}"></div></div>
-        <div class="stage-count">${count} (${pct})</div>
-      </div>`;
-  }).join('');
-  return `
-  <div class="pipeline-container">
-    <div class="pipeline-header"><h3>Lead pipeline (SPANCO)</h3><button class="refresh-btn" onclick="fetchSpancoStats()" aria-label="Refresh">&#8635;</button></div>
-    <div class="pipeline-stats-grid" style="grid-template-columns:1fr 1fr;">
-      <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total leads</div></div>
-      <div class="stat-card"><div class="stat-value">${stats.unspecified||0}</div><div class="stat-label">Stage not set</div></div>
-    </div>
-    <div class="pipeline-stages">${stagesHtml}</div>
-  </div>`;
-}
-
 function renderPipelineDashboard(){
   const stats = state.pipelineStats;
   if(!stats || state.pipelineLoading){
@@ -660,8 +611,6 @@ function renderMeetingsTab(){
   }
   return renderTopbar('Pipeline') + `
   <div class="content">
-    <div class="section-label">Lead stage (pre-meeting)</div>
-    ${renderSpancoDashboard()}
     <div class="section-label">Deal conversion (post-meeting)</div>
     ${renderPipelineDashboard()}
     <div class="section-label">Recent meetings</div>
@@ -679,7 +628,7 @@ function renderBottomNav(){
 
 window.handleTab = function(t){
   state.tab = t;
-  if(t==='meetings'){ fetchMeetings(); fetchPipelineStats(); fetchSpancoStats(); }
+  if(t==='meetings'){ fetchMeetings(); fetchPipelineStats(); }
   render();
   if(t==='search'){
     setTimeout(() => {
